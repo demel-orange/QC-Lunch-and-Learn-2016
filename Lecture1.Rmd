@@ -1,0 +1,793 @@
+---
+output: pdf_document
+---
+# Vectors
+- A vector is an ordered collection of objects of the same type
+- The function c(...) concatenates its arguments to form a vector
+```{r}
+v1 <- c(2.5, 4, 7.3, 0.1)
+v1
+v2 <- c("A", "B", "C", "D")
+v2
+v3 <- -3:3
+v3
+```
+
+# Vectors
+
+- To create a patterned vector:
+	- seq() sequence of integers
+	- rep() vector of replicated elements
+```{r}
+seq(0, 2, by=0.5)
+seq(0, 2, len=6)
+rep(1:5, each=2)
+rep(1:5, times=2)
+```
+
+# Reference Elements of a Vector
+- Use [ ] with a vector/scalar of positions to reference elements of a vector
+```{r}
+x <- c(4, 7, 2, 10, 1, 0)
+x[4]
+x[1:3]
+x[c(2,5,6)]
+x[3] <- 99
+x
+```
+
+# Reference Elements of a Vector
+- Include a minus sign before the vector/scalar to remove elements
+```{r}
+x[-3]
+x[-c(4,5)]
+```
+
+# Reference Elements of a Vector
+- You can also place conditions inside the brackets
+```{r}
+x[x > 4]
+```
+
+# which() and match()
+- Additional functions that will return the indices of a vector
+- which() Indices of a logical vector where the condition is TRUE
+```{r}
+x <- c(4, 7, 2, 10, 1, 0)
+x >= 4
+which(x >= 4)
+```
+
+# which() and match()
+- which.max() Location of the (first) maximum element of a numeric vector
+```{r}
+which.max(x)
+x[which.max(x)]
+max(x)
+```
+- which.min() Location of the (first) minimum element of a numeric vector
+
+# which() and match()
+- match() First position of an element in a vector
+```{r}
+
+y <- rep(1:5, times=5:1)
+y
+match(1:5, y)
+match(unique(y), y)
+```
+
+# Vector Operations
+- When vectors are used in math expressions the operations are performed element by element
+```{r}
+x <- c(4,7,2,10,1,0)
+y <- x^2 + 1
+y
+x*y
+```
+
+# Useful Vector Functions
+Control Structure  | Description
+------------- | -------------:
+sum(x)/prod(x) | Sum/product of the elements of x
+cumsum(x)/cumprod(x) |  Cumulative sum/product of the elements of x
+min(x)/max(x)  | Minimum/Maximum element of x
+mean(x)/median(x) | Mean/median of x
+var(x)/sd(x) | Variance/standard deviation of x
+cov(x,y)/cor(x,y) |  Covariance/correlation of x and y 
+range(x)  | Range of x
+quantile(x) | Quantiles of x for the given probabilities
+fivenum(x)  | Five number summary of x
+length(x) | Number of elements in x
+unique(x) | Unique elements of x
+rev(x)  | Reverse the elements of x
+
+# Useful Vector Functions
+Control Structure  | Description
+------------- | -------------:
+sort(x) | Sort the elements of x
+which() | Indices of TRUEs in a logical vector
+which.max(x)  | Index of the max/min element of x
+match() | First position of an element in a vector
+union(x, y) | Union of x and y
+intersect(x, y) | Intersection of x and y
+setdiff(x, y) | Elements of x that are not in y
+setequal(x, y)  | Do x and y contain the same elements?
+
+# Vector dimensions
+
+- In R, vectors are *dimensionless*
+```{r}
+x <- 1:10
+dim(x) # Will return NULL
+```
+- Do not confuse them with column and row vectors in linear algebra; they are neither
+  - (But they *can* be cast into one-row or one-column matrices)
+  
+# Matrices by assigning dimensions
+
+- We can convert a vector to a matrix by assigning dimensions
+```{r}
+x <- 1:10
+dim(x) <- c(5, 2) # 5 rows, 2 columns
+x
+class(x)
+```
+- Note that the matrix was filled one column at a time
+- (In R, matrices are stored in column-major order)
+
+# Matrices, more directly
+
+- We can also create a matrix more directly (a better way, in most cases)
+```{r}
+A <- matrix(1:10, nrow=5, ncol=2)
+A
+```
+- Alternatively, we could fill the matrix by row
+```{r}
+B <- matrix(1:10, nrow=5, ncol=2, byrow=TRUE)
+B
+```
+
+# Diagonal matrices
+
+```{r}
+A <- matrix(c(1, 0, 0, 0, 1, 0, 0, 0, 1), 3, 3)
+A
+```
+A better way:
+```{r}
+B <- diag(1, 3, 3)
+B
+```
+
+# Matrix multiplication
+
+- The \* operator is *not* for matrix multiplication
+- It is for scalar multiplication (element by element)
+```{r}
+I2 <- diag(1, 2, 2)
+A <- matrix(1:4, 2, 2)
+I2 * A
+```
+- Use %*% instead
+```{r}
+I2 %*% A
+```
+
+# Accessing elements
+
+- To get the $(i, j)$ element of a matrix, use A[i, j], e.g.:
+```{r}
+A
+A[2, 1]
+```
+- [i] will work as if the matrix were simply a vector
+```{r}
+A[3]
+as.vector(A)
+```
+
+# Accessing elements
+
+- Sometimes this is what you want!
+```{r}
+i <- A > 2
+i
+A[i]
+```
+- Or, more directly
+```{r}
+A[A > 2]
+```
+
+# Accessing elements
+
+- Sometimes you'll want an entire row
+```{r}
+A[1, ]
+```
+- Or an entire column
+```{r}
+A[ , 2]
+```
+
+# Reference Elements by Name
+- We can also reference parts of a matrix by using the row or column names
+- Sometimes it is better to reference a row/column by its name rather than by the numeric index. For example, if a program adds or permutes the
+columns of a matrix then the numeric index of the columns may change. As a result you might reference the wrong column of the new matrix if you use the old index number. However the name of each column will not change.
+- Reference matrix elements using the [ ] but now use the column or row name, with quotations, inplace of the index number
+
+# Reference Elements by Name
+- You don't have to specify the names when you create a matrix. To get or set the column, row, or both dimension names of A, use `rownames`, `colnames`, and `dimnames`
+- Can also name the elements of a vector, c("name.1"=1, "name.2"=2). Use the function names() to get or set the names of vector elements.
+
+# Reference Elements by Name
+```{r}
+N <- matrix(c(5,8,3,0,4,1), nrow=2, ncol=3, byrow=TRUE)
+colnames(N) <- c("c.1", "c.2", "c.3")
+N
+N[,"c.2"]
+colnames(N)
+```
+
+# Reference Elements by Name
+```{r}
+M  <- diag(2)
+(MN <- cbind(M, N))
+MN[,2]
+MN[,"c.2"]
+```
+
+# Useful Matrix Functions
+Function  | Description
+------------- | -------------:
+t(A)  | Transpose of A
+det(A)  | Determinate of A
+solve(A, b) | Solves the equation Ax=b for x
+solve(A)  | Matrix inverse of A
+MASS::ginv(A) | Generalized inverse of A (MASS package)
+eigen(A)  |  Eigenvalues and eigenvectors of A
+chol(A) | Choleski factorization of A
+diag(n) | Create an identity matrix
+diag(A) | Returns the diagonal elements of a matrix A
+diag(x) | Create a diagonal matrix from a vector x
+lower.tri(A)/upper.tri(A) | Matrix of logicals indicating lower/upper triangular matrix
+
+# Useful Matrix Functions
+Function  | Description
+------------- | -------------:
+apply() | Apply a function to the margins of a matrix
+rbind(...)  | Combines arguments by rows
+cbind(...)  |  Combines arguments by columns
+dim(A)  | Dimensions of A
+nrow(A), ncol(A)  | Number of rows/columns of A
+colnames(A), rownames(A)  | Get or set the column/row names of A
+dimnames(A) | Get or set the dimension names of A
+
+# Operations across dimensions
+
+- R uses the term *matrix* for two-dimensional data structures, but don't think of them as simply for linear algebra
+- Often, you will have data that is naturally in two dimensions, and you'll want to apply some sort of operation across the rows or columns
+
+# Operations across dimensions
+
+- For example, consider 3 drinking water systems that have sampled for a contaminant
+- Each system takes 4 samples
+- You could organize this into three separate vectors
+```{r}
+samples1 <- c(0, 0, 2, 0)
+samples2 <- c(0, 0, 0, 0)
+samples3 <- c(1, 1, 0, 1)
+```
+- But a matrix is far, far better
+```{r}
+samples <- matrix(c(samples1, samples2, samples3), 3, 4, byrow=TRUE)
+samples
+```
+
+# Operations across dimensions
+
+- Now say we want the sum of the results for each system
+- Instead of summing the rows individually...
+```{r}
+sum(samples[1, ])
+sum(samples[2, ])
+sum(samples[3, ])
+```
+
+# Operations across dimensions
+
+- ...you can use the apply function to apply the sum function to each row
+```{r}
+apply(samples, 1, sum)
+```
+- The 1 is the dimension to sum over---here, the rows, but we could also use 2 for columns
+- Say we wanted to take the mean for each point in time (i.e., for each column)
+```{r}
+apply(samples, 2, mean)
+```
+
+# Example - Simulating Survival Data
+- The apply() function is great for simulating survival data. Suppose we want to simulate n = 10 observations where, the event times T follow an exponential distribution with mean λ = 0.25 and the censoring times C are distributed uniformly from 0 to 1. Then the observed data is,
+```{r}
+n = 10
+# Generate event and censor times (look at the documentation to see
+# how R parameterizes the exponential distribution)
+event  <- rexp(n, 4)
+censor <- runif(n)
+# Select the minimum time and create an indicator variable
+time  <- apply(cbind(censor, event), 1, min)
+index <- apply(cbind(censor, event), 1, which.min)-1
+cbind(event, censor, time, index)          # Verify
+data <- cbind(time, index)                 # Simulated dataset
+```
+
+# Arrays
+An array is a multi-dimensional generalization of a vector
+- To create an array,
+```{r}
+            array(data = NA, dim = length(data), dimnames = NULL)
+```
+- Values are entered by columns
+- Like with vectors and matrices, when arrays are used in math expressions
+the operations are performed element by element.
+- Also like vectors and matrices, the elements of an array must all be of the same type (numeric, character, logical, etc.)
+
+# Arrays
+```{r}
+w <- array(1:12, dim=c(2,3,2),
+           dimnames=list(c("A","B"), c("X","Y","Z"), c("N","M")))
+w
+```
+
+# Reference Elements of an Array
+Reference array elements using the [ ] just like with vectors and matrices, but now with more dimensions
+```{r}
+w <- array(1:12, dim=c(2,3,2),
+           dimnames=list(c("A","B"), c("X","Y","Z"), c("N","M")))
+w[2,3,1]
+w[,"Y",]
+w[1,,]
+w[1:2,,"M"]
+```
+
+# Useful Array Functions
+Function  | Description
+------------- | -------------:
+apply() | Apply a function to the margins of an array
+aperm() | Transpose an array by permuting its dimensions
+dim(x)  | Dimensions of x
+dimnames(x) | Get or set the dimension names of x
+
+# apply()
+- We can use the apply() function for more then one dimension
+- For a 3-dimensional array there are now three margins to apply the function to: 1=rows, 2=columns, and 3=matrices.
+```{r}
+apply(w, 2, sum)
+apply(w, c(1,3), sum)
+```
+
+# Lists
+- A list is a general form of a vector, where the elements don't need to be of the same type or dimension.
+- The function list(...) creates a list of the arguments
+- Arguments have the form name=value. Arguments can be specified with and without names.
+```{r}
+x <- list(num=c(1,2,3), "Nick", identity=diag(2))
+x
+```
+
+# Reference Elements of a List
+- Elements of a list can be referenced using [ ] as well as [[ ]] or $. 
+```{r}
+x <- list(num=c(1,2,3), "Nick", identity=diag(2))
+x[2]
+x[[2]]
+x[["num"]]
+x$identity
+```
+
+# Useful List Functions
+Function  | Description
+------------- | -------------:
+lapply()  | Apply a function to each element of a list, returns a list
+sapply()  | Same as lapply(), but returns a vector or matrix by default
+vapply()  | Similiar to sapply(), but has a pre-specified type of return value
+replicate() | Repeated evaluation of an expression, useful for replicating lists
+unlist(x) | Produce a vector of all the components that occur in x
+length(x) | Number of objects in x
+names(x)  | Names of the objects in x
+
+# Example - lapply()
+- First generate a list L of seven different vectors. Then calculate the five number summary of each vector in L using lapply(), sapply() and vapply().
+```{r}
+# List of three different vectors
+L <- lapply(3:5, seq_len)
+# Calculate the five number summary for each vector in L
+lapply(L, fivenum)
+```
+
+# Example - sapply
+```{r}
+sapply(L, fivenum)
+```
+
+# Example - vapply
+```{r}
+vapply(L, fivenum, c(Min.=0, "1st Quart"=0, Median=0, "3rd Qu"=0, Max.=0))
+```
+
+# Dataframes
+- R refers to datasets as dataframes
+- A dataframe is a matrix-like structure, where the columns can be of different types. You can also think of a dataframe as a list. Each column is an element of the list and each element has the same length.
+- A dataframe is the fundamental data structure used by R's statistical modeling functions
+- Lecture 8 will be completely devoted to the managment and use of dataframes
+```{r}
+head(iris)
+```
+
+# Numeric
+- Technically, numeric data in R can be either double or integer, but in practice numeric data is almost always double (type double refers to real numbers). See ?integer and ?double.
+- .Machine outputs numeric characteristics of the machine running R, such as the largest integer or the machine's precision
+
+# Formatting Numbers
+- format() formats an object for pretty printing. format() is a generic function that is used with other types of objects. See ?format() for additional arguments.
+```{r}
+# trim - If FALSE right justified with common width
+format(c(1,10,100,1000), trim = FALSE)
+format(c(1,10,100,1000), trim = TRUE)
+# nsmall - Minimum number of digits to the right of the decimal point
+format(13.7, nsmall = 3)
+# scientific - Use scientific notation
+format(2^16, scientific = TRUE)
+```
+
+# Logical
+
+- Logical values are represented by the reserved words TRUE and FALSE in all caps or simply T and F.
+
+Logical  | Description
+------------- | -------------:
+!x  | NOT x
+x&y | x AND y elementwise, returns a vector
+x&&y  | x AND y, returns a single value
+x\|y | x OR y elementwise returns a vector
+x\|\|y  | x OR y returns a single value
+xor(x,y)  | Exclusive OR of x and y elementwise
+x %in% y  | x IN y
+
+# Logical
+Logical  | Description
+------------- | -------------:
+x\<y | x\<y
+x>y | x>y
+x <= y | x <= y
+x >= y  | x => y
+x == y  | x=y
+x!=y  | x̸=y
+
+# Logical
+Logical  | Description
+------------- | -------------:
+isTRUE(x) | TRUE if x is TRUE
+all(...)  | TRUE if all arguments are TRUE
+any(...)  | TRUE if at least one argument is TRUE
+identical(x,y)  | Safe and reliable way to test two objects for being exactly equal
+all.equal(x,y) | Test if two objects are nearly equal
+
+# Example - Logical Operations
+```{r}
+x <- 1:10
+(x%%2==0) | (x > 5)    # What elements of x are even or greater than 5?
+x[(x%%2==0) | (x > 5)]
+y <- 5:15              # What elements of x are in y?
+x %in% y
+x[x %in% y]
+```
+
+# Example - Logical Operations
+```{r}
+any(x>5)
+all(x>5)
+```
+
+
+# Isn't that equal?
+- In general, logical operators may not produce a single value and may return an NA if an element is NA or NaN.
+- If you must get a single TRUE or FALSE, such as with if expressions, you should NOT use == or !=. Unless you are absolutely sure that nothing unusual can happen, you should use the identical() function instead.
+- identical() only returns a single logical value, TRUE or FALSE, never NA
+```{r}
+name <- "Nick"
+if(name=="Nick") TRUE else FALSE
+# But what if name is never set to "Nick"?
+
+```
+
+```{r, eval=FALSE}
+name <- NA
+if(name=="Nick") TRUE else FALSE
+if(identical(name, "Nick")) TRUE else FALSE
+```
+
+# Isn't that equal?
+```{r}
+(x <- sqrt(2))
+x^2
+x^2==2
+```
+
+# Isn't that equal?
+- With all.equal() objects are treated as equal if the only difference is probably the result of inexact floating-point calculations. Returns TRUE if the mean relative difference is less then the specified tolerance.
+- all.equal() either returns TRUE or a character string that describes the difference. Therefore, do not use all.equal() directly in if expressions, instead use with isTRUE() or identical().
+```{r}
+all.equal(x^2, 2)
+all.equal(x^2, 1)
+isTRUE(all.equal(x^2, 1))
+```
+
+# Character
+- Character strings are defined by quotation marks (single or double)
+
+Function  | Description
+------------- | -------------:
+cat() | Concatenate objects and print to console (\n for newline)
+paste() | Concatenate objects and return a string
+print() | Print an object
+substr()  | Extract or replace substrings in a character vector
+strtrim() | Trim character vectors to specified display widths
+strsplit()  | Split elements of a character vector according to a substring
+grep()  | Search for matches to a pattern within a character vector. By default returns a vector of the indices that matched
+grepl() | Like grep(), but returns a logical vector
+agrep() | Similar to grep(), but searches for approximate matches
+regexpr() | Similar to grep(), but returns the position of the first instance of a pattern within a string
+
+# Character
+Function  | Description
+------------- | -------------:
+gsub()  | Replace all occurrences of a pattern with a character vector
+sub() | Like gsub(), but only replaces the first occurrence
+tolower()/toupper() | Convert to all lower/upper case
+noquote() | Print a character vector without quotations
+nchar() | Number of characters
+
+# Example - Character Functions
+
+```{r}
+animals <- c("bird", "horse", "fish")
+home    <- c("tree", "barn", "lake")
+length(animals)   # Number of strings
+nchar(animals)    # Number of characters in each string
+cat("Animals:", animals) # Need \n to move cursor to a newline
+cat(animals, home, "\n")
+```
+
+# Example - Character Functions
+```{r}
+paste(animals, collapse=" ")
+a.h=paste(animals, home, sep=".") # Pairwise joining of animals and home
+# Split strings at ".", fixed=TRUE since "." is used for pattern matching
+unlist(strsplit(a.h, ".", fixed=TRUE))
+substr(animals, 2, 4) # Get characters 2-4 of each animal
+strtrim(animals, 3)   # Print the first three characters
+toupper(animals)      # Print animals in all upper case
+```
+
+# Example - Pattern Matching
+- A regular expression is a pattern that describes a set of strings.
+```{r}
+# colors() is a character vector of all the built-in color names
+colors()[grep("red", colors())]
+colors()[grep("^red", colors())]
+```
+
+# Example - Pattern Matching
+```{r}
+colors()[grep("red$", colors())]
+colors()[grep("red.", colors())]
+```
+
+# Example - Pattern Matching
+```{r}
+colors()[grep("^[r-t]", colors())] # Colors that begin with r, s, or t
+```
+
+# Example - Pattern Matching
+```{r}
+places <- c("home", "zoo", "school", "work", "park")
+gsub("o", "O", places)     # Replace all "o" with "O"
+sub("o", "O", places)      # Replace the first "o" with "O"
+# Capitalize the first letter, uses Perl-like regular expressions
+gsub("(\\w)(\\w*)", "\\U\\1\\L\\2", places, perl=TRUE)
+```
+
+# Factors
+
+A factor is a categorical variable with a defined number of ordered or unordered levels. Use the function factor to create a factor variable.
+```{r}
+factor(rep(1:2, 4), labels=c("trt.1", "trt.2"))
+factor(rep(1:3, 4), labels=c("low", "med", "high"), ordered=TRUE)
+```
+
+# Factors
+
+Function  | Description
+------------- | -------------:
+levels(x) | Retrieve or set the levels of x
+nlevels(x)  | Return the number of levels of x
+relevel(x, ref) | Levels of x are reordered so that the level specified by ref is first
+reorder() | Reorders levels based on the values of a second variable
+gl()  | Generate factors by specifying the pattern of their levels
+  cut(x, breaks)  | Divides the range of x into intervals (factors) determined by breaks
+
+# Example - Factor Functions
+```{r}
+# Generate factor levels for 3 treatments and 2 cases per treatment
+f <- gl(3, 2, labels=paste("trt",1:3, sep="."))
+levels(f)
+nlevels(f)
+relevel(f, "trt.2")
+```
+
+# Example - Factor Functions
+```{r}
+x <- runif(10)
+cut(x, 3)
+cut(x, c(0,.25,.5,.75,1))
+# Cut x into three intervals
+# Cut x at the given cut points
+```
+
+# Dates and Times
+- R has objects that are dates only and objects that are dates and times.
+- We will just focus on dates. Look at ?DateTimeClasses for information about how to handles dates and times.
+- An R date object has the format: Year-Month-Day
+```{r}
+Sys.Date()
+```
+
+# Dates and Times
+Function  | Description
+------------- | -------------:
+Sys.Date()  | Current date
+as.Date() | Cast to date
+format.Date() | Format a date
+seq.Date()  | Generate a sequence of dates
+cut.Date()  | Cut dates into intervals
+weekdays, months, quarters  | Extract parts of a date object
+julian  | Number of days since an origin
+
+.Date suffix is optional for calling format.Date(), seq.Date() and cut.Date(), but is necessary for viewing the appropriate documentation
+
+# Convert Strings to Date Objects
+- Converting a string to a date object requires specifying a format string that defines the date format
+- Any character in the format string other then the % symbol is interpreted literally.
+- Common conversion specifications (see ?strptime for a complete list),
+\%a Abbreviated weekday name %A Full weekday name
+\%d Day of the month
+\%B Full month name
+\%b Abbreviated month name
+\%m Numeric month (01-12)
+\%y Year without century (be very careful) %Y Year with century
+```{r}
+dates.1 <- c("5jan2008", "19aug2008", "2feb2009", "29sep2009")
+as.Date(dates.1, format="%d%b%Y")
+dates.2 <- c("5-1-2008", "19-8-2008", "2-2-2009", "29-9-2009")
+as.Date(dates.2, format="%d-%m-%Y")
+```
+
+# Sequence of Dates
+- To create a sequence of dates,
+seq.Date(from, to, by, length.out = NULL)
+from, to by
+length.out
+Start and ending date objects
+A character string, containing one of day, week, month, or year. Can optionally be preceded by a (positive or negative) integer and a space, or followed by a . Integer, desired length of the sequence
+```{r}
+seq.Date(as.Date("2011/1/1"), as.Date("2011/1/31"), by="week")
+seq.Date(as.Date("2011/1/1"), as.Date("2011/1/31"), by="3 days")
+seq.Date(as.Date("2011/1/1"), by="week", length.out=10)
+```
+
+# Cutting Dates
+- To divide a sequence of dates in to levels,
+```{r, eval= FALSE}
+cut.Date(x, breaks, start.on.monday = TRUE)
+jan <- seq.Date(as.Date("2011/1/1"), as.Date("2011/1/31"), by="days")
+cut(jan, breaks="weeks")
+```
+
+# Operations with Dates
+- Dates can be added, subtracted, and compared
+```{r}
+jan1 <- as.Date("2011/1/1")
+(jan8 <- jan1 + 7)
+jan1 - 14
+jan8 - jan1
+jan8 > jan1
+```
+
+# Formatting Dates
+```{r}
+format.Date(jan8, "%Y")
+format.Date(jan8, "%b-%d")
+```
+
+# Missing Data
+- R denotes data that is not available by NA
+- How a function handles missing data depends on the function. For example
+mean only ignores NAs if the argument na.rm=TRUE, whereas which always ignores missing data.
+```{r}
+x <- c(4, 7, 2, 0, 1, NA)
+mean(x)
+mean(x, na.rm=TRUE)
+which(x>4)
+```
+- See the documentation for how a particular function handles missing data.
+
+# NULL and NaN
+- Quantities that are not a number, such as 0/0, are denoted by NaN. In R
+- NaN implies NA (NaN refers to unavailable numeric data and NA refers to any
+type of unavailable data)
+- Undefined or null objects are denoted in R by NULL. This is useful when we
+do not want to add row labels to a matrix. For example,
+```{r}
+     x <- matrix(1:4, ncol=2, dimnames=list(NULL, c("c.1", "c.2")))
+```
+
+# Detecting Missing Data
+- To test for missing data avoid using identical() and never use ==. Using identical() relies on unreliable internal computations and == will always evaluate to NA or NaN.
+- Functions used for detecting missing data: `is.na`, `is.nan`, and `is.null`
+```{r}
+x <- c(4, 7, 2, 0, 1, NA)
+x==NA
+is.na(x)
+any(is.na(x))
+```
+
+# Detecting Missing Data
+```{r}
+(y <- x/0)
+is.nan(y)
+is.na(y)
+```
+
+# Testing and Coercing Objects
+- All objects in R have a type. We can test the type of an object using a is.type() function.
+- We can also attempt to coerce objects of one type to another using a as.type() function.
+
+# Automatic conversions
+- Logical values are converted to numbers by setting FALSE as 0 and TRUE as 1
+- Logical, numeric, factor and date types are converted to characters by converting each element/level individually
+
+# Some general rules for coercion
+- Numeric values are coerced to logical by treating all non-zero values as TRUE
+- Numeric characters can be coerced to numbers, but non-numeric characters
+cannot
+- Factor levels can be coerced to numeric and numbers can be coerced to
+factors with a level for each unique number
+- Vectors, matrices and arrays are coerced to lists by making each element a
+vector of length 1
+- Vectors, matrices, arrays can also be coerced from one form to another
+
+# Testing and Coercing Functions
+- To test: is.numeric, is.array, is.matrix, is.data.frame, etc.
+- To convert: as.numeric, as.array, as.matrix, as.data.frame, etc.
+
+# Example - Testing and Coercing Objects
+```{r}
+x <- 1:10
+x>5
+sum(x>5)    # Automatic conversion to numeric vector
+is.vector(x)
+is.numeric(x)
+```
+
+# Example - Testing and Coercing Objects
+```{r}
+as.list(x)
+```
+
+# Example - Testing and Coercing Objects
+```{r}
+as.numeric("123")
+```

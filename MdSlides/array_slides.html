@@ -1,0 +1,299 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="Content-Style-Type" content="text/css" />
+  <meta name="generator" content="pandoc" />
+  <meta name="author" content="In Markdown now so I can get something down" />
+  <title>Just a quick draft of some array slides</title>
+  <style type="text/css">code{white-space: pre;}</style>
+  <style type="text/css">
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; }
+code > span.dt { color: #902000; }
+code > span.dv { color: #40a070; }
+code > span.bn { color: #40a070; }
+code > span.fl { color: #40a070; }
+code > span.ch { color: #4070a0; }
+code > span.st { color: #4070a0; }
+code > span.co { color: #60a0b0; font-style: italic; }
+code > span.ot { color: #007020; }
+code > span.al { color: #ff0000; font-weight: bold; }
+code > span.fu { color: #06287e; }
+code > span.er { color: #ff0000; font-weight: bold; }
+  </style>
+  <link rel="stylesheet" type="text/css" media="screen, projection, print"
+    href="http://www.w3.org/Talks/Tools/Slidy2/styles/slidy.css" />
+  <script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
+  <script src="http://www.w3.org/Talks/Tools/Slidy2/scripts/slidy.js.gz"
+    charset="utf-8" type="text/javascript"></script>
+</head>
+<body>
+<div class="slide titlepage">
+  <h1 class="title">Just a quick draft of some array slides</h1>
+  <p class="author">
+In Markdown now so I can get something down
+  </p>
+  <p class="date">Will transfer to PowerPoint or whatever</p>
+</div>
+<div id="vector-dimensions" class="slide section level1">
+<h1>Vector dimensions</h1>
+<ul>
+<li>In R, vectors are <em>dimensionless</em></li>
+</ul>
+<pre class="sourceCode r"><code class="sourceCode r">x &lt;-<span class="st"> </span><span class="dv">1</span>:<span class="dv">10</span>
+<span class="kw">dim</span>(x)  <span class="co"># Will return NULL</span></code></pre>
+<pre><code>## NULL</code></pre>
+<ul>
+<li>Do not confuse them with column and row vectors in linear algebra; they are neither</li>
+<li>(But they <em>can</em> be cast into one-row or one-column matrices)</li>
+</ul>
+</div>
+<div id="matrices-by-assigning-dimensions" class="slide section level1">
+<h1>Matrices by assigning dimensions</h1>
+<ul>
+<li>We can convert a vector to a matrix by assigning dimensions</li>
+</ul>
+<pre class="sourceCode r"><code class="sourceCode r">x &lt;-<span class="st"> </span><span class="dv">1</span>:<span class="dv">10</span>
+<span class="kw">dim</span>(x) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">5</span>, <span class="dv">2</span>)  <span class="co"># 5 rows, 2 columns</span>
+x</code></pre>
+<pre><code>##      [,1] [,2]
+## [1,]    1    6
+## [2,]    2    7
+## [3,]    3    8
+## [4,]    4    9
+## [5,]    5   10</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">class</span>(x)</code></pre>
+<pre><code>## [1] &quot;matrix&quot;</code></pre>
+<ul>
+<li>Note that the matrix was filled one column at a time</li>
+<li>(In R, matrices are stored in column-major order)</li>
+</ul>
+</div>
+<div id="matrices-more-directly" class="slide section level1">
+<h1>Matrices, more directly</h1>
+<ul>
+<li>We can also create a matrix more directly (a better way, in most cases)</li>
+</ul>
+<pre class="sourceCode r"><code class="sourceCode r">A &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="dv">1</span>:<span class="dv">10</span>, <span class="dt">nrow =</span> <span class="dv">5</span>, <span class="dt">ncol =</span> <span class="dv">2</span>)
+A</code></pre>
+<pre><code>##      [,1] [,2]
+## [1,]    1    6
+## [2,]    2    7
+## [3,]    3    8
+## [4,]    4    9
+## [5,]    5   10</code></pre>
+<ul>
+<li>Alternatively, we could fill the matrix by row</li>
+</ul>
+<pre class="sourceCode r"><code class="sourceCode r">B &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="dv">1</span>:<span class="dv">10</span>, <span class="dt">nrow =</span> <span class="dv">5</span>, <span class="dt">ncol =</span> <span class="dv">2</span>, <span class="dt">byrow =</span> <span class="ot">TRUE</span>)
+B</code></pre>
+<pre><code>##      [,1] [,2]
+## [1,]    1    2
+## [2,]    3    4
+## [3,]    5    6
+## [4,]    7    8
+## [5,]    9   10</code></pre>
+</div>
+<div id="diagonal-matrices" class="slide section level1">
+<h1>Diagonal matrices</h1>
+<pre class="sourceCode r"><code class="sourceCode r">A &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>), <span class="dv">3</span>, <span class="dv">3</span>)
+A</code></pre>
+<pre><code>##      [,1] [,2] [,3]
+## [1,]    1    0    0
+## [2,]    0    1    0
+## [3,]    0    0    1</code></pre>
+<p>A better way:</p>
+<pre class="sourceCode r"><code class="sourceCode r">B &lt;-<span class="st"> </span><span class="kw">diag</span>(<span class="dv">1</span>, <span class="dv">3</span>, <span class="dv">3</span>)
+B</code></pre>
+<pre><code>##      [,1] [,2] [,3]
+## [1,]    1    0    0
+## [2,]    0    1    0
+## [3,]    0    0    1</code></pre>
+</div>
+<div id="matrix-multiplication" class="slide section level1">
+<h1>Matrix multiplication</h1>
+<ul>
+<li>The * operator is <em>not</em> for matrix multiplication</li>
+<li>It is for scalar multiplication (element by element)</li>
+</ul>
+<pre class="sourceCode r"><code class="sourceCode r">I2 &lt;-<span class="st"> </span><span class="kw">diag</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">2</span>)
+A &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="dv">1</span>:<span class="dv">4</span>, <span class="dv">2</span>, <span class="dv">2</span>)
+I2 *<span class="st"> </span>A</code></pre>
+<pre><code>##      [,1] [,2]
+## [1,]    1    0
+## [2,]    0    4</code></pre>
+<ul>
+<li>Use %*% instead</li>
+</ul>
+<pre class="sourceCode r"><code class="sourceCode r">I2 %*%<span class="st"> </span>A</code></pre>
+<pre><code>##      [,1] [,2]
+## [1,]    1    3
+## [2,]    2    4</code></pre>
+<ul>
+<li>Unless you really do want *</li>
+</ul>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="dv">3</span> *<span class="st"> </span>I2</code></pre>
+<pre><code>##      [,1] [,2]
+## [1,]    3    0
+## [2,]    0    3</code></pre>
+</div>
+<div id="accessing-elements" class="slide section level1">
+<h1>Accessing elements</h1>
+<ul>
+<li>To get the <span class="math">\((i, j)\)</span> element of a matrix, use A[i, j], e.g.:</li>
+</ul>
+<pre class="sourceCode r"><code class="sourceCode r">A</code></pre>
+<pre><code>##      [,1] [,2]
+## [1,]    1    3
+## [2,]    2    4</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">A[<span class="dv">2</span>, <span class="dv">1</span>]</code></pre>
+<pre><code>## [1] 2</code></pre>
+<ul>
+<li>[i] will work as if the matrix were simply a vector</li>
+</ul>
+<pre class="sourceCode r"><code class="sourceCode r">A[<span class="dv">3</span>]</code></pre>
+<pre><code>## [1] 3</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">as.vector</span>(A)</code></pre>
+<pre><code>## [1] 1 2 3 4</code></pre>
+</div>
+<div id="accessing-elements-1" class="slide section level1">
+<h1>Accessing elements</h1>
+<ul>
+<li>Sometimes this is what you want!</li>
+</ul>
+<pre class="sourceCode r"><code class="sourceCode r">i &lt;-<span class="st"> </span>A &gt;<span class="st"> </span><span class="dv">2</span>
+i</code></pre>
+<pre><code>##       [,1] [,2]
+## [1,] FALSE TRUE
+## [2,] FALSE TRUE</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">A[i]</code></pre>
+<pre><code>## [1] 3 4</code></pre>
+<ul>
+<li>Or, more directly</li>
+</ul>
+<pre class="sourceCode r"><code class="sourceCode r">A[A &gt;<span class="st"> </span><span class="dv">2</span>]</code></pre>
+<pre><code>## [1] 3 4</code></pre>
+</div>
+<div id="accessing-elements-2" class="slide section level1">
+<h1>Accessing elements</h1>
+<ul>
+<li>Sometimes you’ll want an entire row</li>
+</ul>
+<pre class="sourceCode r"><code class="sourceCode r">A[<span class="dv">1</span>, ]</code></pre>
+<pre><code>## [1] 1 3</code></pre>
+<ul>
+<li>Or an entire column</li>
+</ul>
+<pre class="sourceCode r"><code class="sourceCode r">A[, <span class="dv">2</span>]</code></pre>
+<pre><code>## [1] 3 4</code></pre>
+</div>
+<div id="operations-across-dimensions" class="slide section level1">
+<h1>Operations across dimensions</h1>
+<ul>
+<li>R uses the term <em>matrix</em> for two-dimensional data structures, but don’t think of them as simply for linear algebra</li>
+<li>Often, you will have data that is naturally in two dimensions, and you’ll want to apply some sort of operation across the rows or columns</li>
+</ul>
+</div>
+<div id="operations-across-dimensions-1" class="slide section level1">
+<h1>Operations across dimensions</h1>
+<ul>
+<li>For example, consider 3 drinking water systems that have sampled for a contaminant</li>
+<li>Each system takes 4 samples</li>
+<li>You could organize this into three separate vectors</li>
+</ul>
+<pre class="sourceCode r"><code class="sourceCode r">samples1 &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">2</span>, <span class="dv">0</span>)
+samples2 &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>)
+samples3 &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">1</span>)</code></pre>
+<ul>
+<li>But a matrix is far, far better</li>
+</ul>
+<pre class="sourceCode r"><code class="sourceCode r">samples &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">c</span>(samples1, samples2, samples3), <span class="dv">3</span>, <span class="dv">4</span>, <span class="dt">byrow =</span> <span class="ot">TRUE</span>)
+samples</code></pre>
+<pre><code>##      [,1] [,2] [,3] [,4]
+## [1,]    0    0    2    0
+## [2,]    0    0    0    0
+## [3,]    1    1    0    1</code></pre>
+</div>
+<div id="operations-across-dimensions-2" class="slide section level1">
+<h1>Operations across dimensions</h1>
+<ul>
+<li>Now say we want the sum of the results for each system</li>
+<li>Instead of summing the rows individually…</li>
+</ul>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sum</span>(samples[<span class="dv">1</span>, ])</code></pre>
+<pre><code>## [1] 2</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sum</span>(samples[<span class="dv">2</span>, ])</code></pre>
+<pre><code>## [1] 0</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sum</span>(samples[<span class="dv">3</span>, ])</code></pre>
+<pre><code>## [1] 3</code></pre>
+</div>
+<div id="operations-across-dimensions-3" class="slide section level1">
+<h1>Operations across dimensions</h1>
+<ul>
+<li>…you can use the apply function to apply the sum function to each row</li>
+</ul>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">apply</span>(samples, <span class="dv">1</span>, sum)</code></pre>
+<pre><code>## [1] 2 0 3</code></pre>
+<ul>
+<li>The 1 is the dimension to sum over—here, the rows, but we could also use 2 for columns</li>
+<li>Say we wanted to take the mean for each point in time (i.e., for each column)</li>
+</ul>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">apply</span>(samples, <span class="dv">2</span>, mean)</code></pre>
+<pre><code>## [1] 0.3333 0.3333 0.6667 0.3333</code></pre>
+</div>
+<div id="operations-across-dimensions-4" class="slide section level1">
+<h1>Operations across dimensions</h1>
+<ul>
+<li>Folks with programming backgrounds might understand this with a for loop:</li>
+</ul>
+<pre class="sourceCode r"><code class="sourceCode r">result &lt;-<span class="st"> </span><span class="kw">vector</span>(<span class="st">&quot;numeric&quot;</span>, <span class="dv">3</span>)  <span class="co"># A vector of length 3 for the results</span>
+for (row in <span class="dv">1</span>:<span class="kw">nrow</span>(samples)) {
+    result[row] &lt;-<span class="st"> </span><span class="kw">sum</span>(samples[row, ])
+}
+result</code></pre>
+<pre><code>## [1] 2 0 3</code></pre>
+<ul>
+<li>Or even:</li>
+</ul>
+<pre class="sourceCode r"><code class="sourceCode r">result &lt;-<span class="st"> </span><span class="kw">vector</span>(<span class="st">&quot;numeric&quot;</span>, <span class="dv">3</span>)
+for (row in <span class="dv">1</span>:<span class="kw">nrow</span>(samples)) {
+    for (col in <span class="dv">1</span>:<span class="kw">ncol</span>(samples)) {
+        result[row] &lt;-<span class="st"> </span>result[row] +<span class="st"> </span>samples[row, col]
+    }
+}
+result</code></pre>
+<pre><code>## [1] 2 0 3</code></pre>
+<ul>
+<li>But you usually shouldn’t do this! (Plus, isn’t it ugly?)</li>
+</ul>
+</div>
+<div id="modes" class="slide section level1">
+<h1>Modes</h1>
+<ul>
+<li>Matrices are not limited to numeric and integer modes</li>
+<li>You can have, for example, a character matrix:</li>
+</ul>
+<pre class="sourceCode r"><code class="sourceCode r">x &lt;-<span class="st"> </span><span class="kw">matrix</span>(month.name, <span class="dv">3</span>, <span class="dv">4</span>)
+x</code></pre>
+<pre><code>##      [,1]       [,2]    [,3]        [,4]      
+## [1,] &quot;January&quot;  &quot;April&quot; &quot;July&quot;      &quot;October&quot; 
+## [2,] &quot;February&quot; &quot;May&quot;   &quot;August&quot;    &quot;November&quot;
+## [3,] &quot;March&quot;    &quot;June&quot;  &quot;September&quot; &quot;December&quot;</code></pre>
+</div>
+<div id="arrays" class="slide section level1">
+<h1>Arrays</h1>
+<ul>
+<li>Why limit ourselves to two dimensions?</li>
+<li>In R, a matrix is a special case of an <em>array</em>, which can have many dimensions</li>
+<li>Arrays are quite powerful and allow calculations to be performed quickly</li>
+</ul>
+</div>
+</body>
+</html>

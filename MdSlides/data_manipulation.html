@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="Content-Style-Type" content="text/css" />
+  <meta name="generator" content="pandoc" />
+  <meta name="author" content="with the iris dataset" />
+  <title>Data Manipulation</title>
+  <style type="text/css">code{white-space: pre;}</style>
+  <style type="text/css">
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; }
+code > span.dt { color: #902000; }
+code > span.dv { color: #40a070; }
+code > span.bn { color: #40a070; }
+code > span.fl { color: #40a070; }
+code > span.ch { color: #4070a0; }
+code > span.st { color: #4070a0; }
+code > span.co { color: #60a0b0; font-style: italic; }
+code > span.ot { color: #007020; }
+code > span.al { color: #ff0000; font-weight: bold; }
+code > span.fu { color: #06287e; }
+code > span.er { color: #ff0000; font-weight: bold; }
+  </style>
+  <link rel="stylesheet" type="text/css" media="screen, projection, print"
+    href="http://www.w3.org/Talks/Tools/Slidy2/styles/slidy.css" />
+  <script src="http://www.w3.org/Talks/Tools/Slidy2/scripts/slidy.js.gz"
+    charset="utf-8" type="text/javascript"></script>
+</head>
+<body>
+<div class="slide titlepage">
+  <h1 class="title">Data Manipulation</h1>
+  <p class="author">
+with the iris dataset
+  </p>
+</div>
+<div id="motivation" class="slide section level1">
+<h1>Motivation</h1>
+<p>Consider the <code>iris</code> dataset.</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(iris)</code></pre>
+<pre><code>##   Sepal.Length Sepal.Width Petal.Length Petal.Width Species
+## 1          5.1         3.5          1.4         0.2  setosa
+## 2          4.9         3.0          1.4         0.2  setosa
+## 3          4.7         3.2          1.3         0.2  setosa
+## 4          4.6         3.1          1.5         0.2  setosa
+## 5          5.0         3.6          1.4         0.2  setosa
+## 6          5.4         3.9          1.7         0.4  setosa</code></pre>
+</div>
+<div id="motivation-1" class="slide section level1">
+<h1>Motivation</h1>
+<p>We can produce a basic summary of the dataset with <code>summary</code>:</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(iris)</code></pre>
+<pre><code>##   Sepal.Length   Sepal.Width    Petal.Length   Petal.Width 
+##  Min.   :4.30   Min.   :2.00   Min.   :1.00   Min.   :0.1  
+##  1st Qu.:5.10   1st Qu.:2.80   1st Qu.:1.60   1st Qu.:0.3  
+##  Median :5.80   Median :3.00   Median :4.35   Median :1.3  
+##  Mean   :5.84   Mean   :3.06   Mean   :3.76   Mean   :1.2  
+##  3rd Qu.:6.40   3rd Qu.:3.30   3rd Qu.:5.10   3rd Qu.:1.8  
+##  Max.   :7.90   Max.   :4.40   Max.   :6.90   Max.   :2.5  
+##        Species  
+##  setosa    :50  
+##  versicolor:50  
+##  virginica :50  
+##                 
+##                 
+## </code></pre>
+<p>But what if this particular summary doesn’t suit us? What if we’re interested in, for example, additional quantiles for the numeric variables? Or what if we want to produce a histogram for each variable?</p>
+</div>
+<div id="a-repetitive-solution" class="slide section level1">
+<h1>A repetitive solution</h1>
+<p>We could perform operations manually on each variable:</p>
+<pre class="sourceCode r"><code class="sourceCode r">mean.sepal.length &lt;-<span class="st"> </span><span class="kw">mean</span>(iris$Sepal.Length)
+sepal.length.lower &lt;-<span class="st"> </span><span class="kw">quantile</span>(iris$Sepal.Length, <span class="fl">0.05</span>)
+sepal.length.upper &lt;-<span class="st"> </span><span class="kw">quantile</span>(iris$Sepal.Length, <span class="fl">0.95</span>)
+<span class="kw">qplot</span>(Sepal.Length, <span class="dt">data =</span> iris, <span class="dt">binwidth =</span> <span class="fl">0.2</span>)</code></pre>
+<div class="figure">
+<img src="figure/unnamed-chunk-4.png" />
+</div>
+<p>Etc.</p>
+</div>
+<div id="a-slightly-better-solution" class="slide section level1">
+<h1>A slightly better solution</h1>
+<p>But what if we later need to tweak the histogram? Or change the quantiles? We’d have to do this multiple times! A better solution would be to define a function that performs all the needed operations on a parameter. For example:</p>
+<pre class="sourceCode r"><code class="sourceCode r">calc.mean.and.quantiles &lt;-<span class="st"> </span>function(x) {
+    <span class="kw">c</span>(<span class="dt">mean =</span> <span class="kw">mean</span>(x), <span class="kw">quantile</span>(x, <span class="fl">0.05</span>), <span class="kw">quantile</span>(x, <span class="fl">0.95</span>))
+}
+<span class="kw">calc.mean.and.quantiles</span>(iris$Sepal.Length)</code></pre>
+<pre><code>##  mean    5%   95% 
+## 5.843 4.600 7.255</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">calc.mean.and.quantiles</span>(iris$Sepal.Width)</code></pre>
+<pre><code>##  mean    5%   95% 
+## 3.057 2.345 3.800</code></pre>
+<p>This works fine for small datasets, but what if we don’t even know the variable names? Or what if there are too many?</p>
+</div>
+<div id="a-more-general-solution" class="slide section level1">
+<h1>A more general solution</h1>
+<p>The data is currently in <em>wide</em> form, with a column for each variable. We can put it in <em>long</em> form, with a column for variable names and another column for values. The best library for this is <code>reshape2</code>.</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(reshape2)
+iris.long &lt;-<span class="st"> </span><span class="kw">melt</span>(iris, <span class="st">&quot;Species&quot;</span>)
+<span class="kw">head</span>(iris.long)</code></pre>
+<pre><code>##   Species     variable value
+## 1  setosa Sepal.Length   5.1
+## 2  setosa Sepal.Length   4.9
+## 3  setosa Sepal.Length   4.7
+## 4  setosa Sepal.Length   4.6
+## 5  setosa Sepal.Length   5.0
+## 6  setosa Sepal.Length   5.4</code></pre>
+</div>
+<div id="immediate-payoff" class="slide section level1">
+<h1>Immediate payoff</h1>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">qplot</span>(value, <span class="dt">data =</span> iris.long, <span class="dt">binwidth =</span> <span class="fl">0.2</span>) +<span class="st"> </span><span class="kw">facet_wrap</span>(~variable)</code></pre>
+<div class="figure">
+<img src="figure/unnamed-chunk-7.png" />
+</div>
+</div>
+<div id="immediate-payoff-1" class="slide section level1">
+<h1>Immediate payoff</h1>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">qplot</span>(value, <span class="dt">data =</span> iris.long, <span class="dt">binwidth =</span> <span class="fl">0.2</span>) +<span class="st"> </span><span class="kw">facet_grid</span>(Species ~<span class="st"> </span>variable)</code></pre>
+<div class="figure">
+<img src="figure/unnamed-chunk-8.png" />
+</div>
+<p>How many lines would this take if another method were used?</p>
+</div>
+<div id="summary-statistics" class="slide section level1">
+<h1>Summary statistics</h1>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">tapply</span>(iris.long$value, iris.long$variable, function(x) {
+    <span class="kw">c</span>(<span class="dt">mean =</span> <span class="kw">mean</span>(x), <span class="kw">quantile</span>(x, <span class="fl">0.05</span>), <span class="kw">quantile</span>(x, <span class="fl">0.95</span>))
+})</code></pre>
+<pre><code>## $Sepal.Length
+##  mean    5%   95% 
+## 5.843 4.600 7.255 
+## 
+## $Sepal.Width
+##  mean    5%   95% 
+## 3.057 2.345 3.800 
+## 
+## $Petal.Length
+##  mean    5%   95% 
+## 3.758 1.300 6.100 
+## 
+## $Petal.Width
+##  mean    5%   95% 
+## 1.199 0.200 2.300</code></pre>
+</div>
+<div id="summary-statistics-with-plyr" class="slide section level1">
+<h1>Summary Statistics with plyr</h1>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(plyr)
+<span class="kw">ddply</span>(iris.long, .(variable), function(x) {
+    <span class="kw">c</span>(<span class="dt">mean =</span> <span class="kw">mean</span>(x$value), <span class="kw">quantile</span>(x$value, <span class="fl">0.05</span>), <span class="kw">quantile</span>(x$value, <span class="fl">0.95</span>))
+})</code></pre>
+<pre><code>##       variable  mean    5%   95%
+## 1 Sepal.Length 5.843 4.600 7.255
+## 2  Sepal.Width 3.057 2.345 3.800
+## 3 Petal.Length 3.758 1.300 6.100
+## 4  Petal.Width 1.199 0.200 2.300</code></pre>
+</div>
+<div id="summary-statistics-with-plyr-1" class="slide section level1">
+<h1>Summary Statistics with plyr</h1>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ddply</span>(iris.long, .(variable), summarize, <span class="dt">mean =</span> <span class="kw">mean</span>(value), <span class="dt">lower =</span> <span class="kw">quantile</span>(value, 
+    <span class="fl">0.05</span>), <span class="dt">upper =</span> <span class="kw">quantile</span>(value, <span class="fl">0.95</span>))</code></pre>
+<pre><code>##       variable  mean lower upper
+## 1 Sepal.Length 5.843 4.600 7.255
+## 2  Sepal.Width 3.057 2.345 3.800
+## 3 Petal.Length 3.758 1.300 6.100
+## 4  Petal.Width 1.199 0.200 2.300</code></pre>
+</div>
+<div id="summary-statistics-with-plyr-2" class="slide section level1">
+<h1>Summary Statistics with plyr</h1>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ddply</span>(iris.long, .(variable, Species), summarize, <span class="dt">mean =</span> <span class="kw">mean</span>(value), <span class="dt">lower =</span> <span class="kw">quantile</span>(value, 
+    <span class="fl">0.05</span>), <span class="dt">upper =</span> <span class="kw">quantile</span>(value, <span class="fl">0.95</span>))</code></pre>
+<pre><code>##        variable    Species  mean lower upper
+## 1  Sepal.Length     setosa 5.006 4.400 5.610
+## 2  Sepal.Length versicolor 5.936 5.045 6.755
+## 3  Sepal.Length  virginica 6.588 5.745 7.700
+## 4   Sepal.Width     setosa 3.428 3.000 4.055
+## 5   Sepal.Width versicolor 2.770 2.245 3.200
+## 6   Sepal.Width  virginica 2.974 2.500 3.510
+## 7  Petal.Length     setosa 1.462 1.200 1.700
+## 8  Petal.Length versicolor 4.260 3.390 4.900
+## 9  Petal.Length  virginica 5.552 4.845 6.655
+## 10  Petal.Width     setosa 0.246 0.100 0.400
+## 11  Petal.Width versicolor 1.326 1.000 1.600
+## 12  Petal.Width  virginica 2.026 1.545 2.455</code></pre>
+</div>
+</body>
+</html>

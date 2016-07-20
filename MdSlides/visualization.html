@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="Content-Style-Type" content="text/css" />
+  <meta name="generator" content="pandoc" />
+  <title>Visualization</title>
+  <style type="text/css">code{white-space: pre;}</style>
+  <style type="text/css">
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; }
+code > span.dt { color: #902000; }
+code > span.dv { color: #40a070; }
+code > span.bn { color: #40a070; }
+code > span.fl { color: #40a070; }
+code > span.ch { color: #4070a0; }
+code > span.st { color: #4070a0; }
+code > span.co { color: #60a0b0; font-style: italic; }
+code > span.ot { color: #007020; }
+code > span.al { color: #ff0000; font-weight: bold; }
+code > span.fu { color: #06287e; }
+code > span.er { color: #ff0000; font-weight: bold; }
+  </style>
+  <link rel="stylesheet" type="text/css" media="screen, projection, print"
+    href="http://www.w3.org/Talks/Tools/Slidy2/styles/slidy.css" />
+  <script src="http://www.w3.org/Talks/Tools/Slidy2/scripts/slidy.js.gz"
+    charset="utf-8" type="text/javascript"></script>
+</head>
+<body>
+<div class="slide titlepage">
+  <h1 class="title">Visualization</h1>
+  <p class="author">
+
+  </p>
+</div>
+<div id="data-visualization-in-r" class="slide section level1">
+<h1>Data visualization in R</h1>
+<ul>
+<li>R contains many packages for data visualization</li>
+<li>This means that you can usually create the visualization you need, but you may have to sort through packages sometimes</li>
+<li>Fortunately, there are a few basic and powerful graphics packages</li>
+<li>We’ll look at <code>graphics</code> (included in R) and <code>ggplot2</code></li>
+</ul>
+</div>
+<div id="the-graphics-package-scatterplots" class="slide section level1">
+<h1>The graphics package: scatterplots</h1>
+<ul>
+<li>R contains a number of easy, built-in functions for graphics</li>
+<li>The simplest is the scatterplot</li>
+</ul>
+<pre class="sourceCode r"><code class="sourceCode r">x &lt;-<span class="st"> </span><span class="kw">seq</span>(<span class="dt">from =</span> -<span class="dv">10</span>, <span class="dt">to =</span> <span class="dv">10</span>, <span class="dt">length.out =</span> <span class="dv">100</span>)
+y &lt;-<span class="st"> </span>x^<span class="dv">2</span>
+<span class="kw">plot</span>(x, y)</code></pre>
+<div class="figure">
+<img src="figure/unnamed-chunk-1.png" />
+</div>
+</div>
+<div id="drawing-a-curve" class="slide section level1">
+<h1>Drawing a curve</h1>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(x, y, <span class="dt">type =</span> <span class="st">&quot;l&quot;</span>)</code></pre>
+<div class="figure">
+<img src="figure/unnamed-chunk-2.png" />
+</div>
+</div>
+<div id="adding-labels" class="slide section level1">
+<h1>Adding labels</h1>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(x, y, <span class="dt">type =</span> <span class="st">&quot;l&quot;</span>, <span class="dt">col =</span> <span class="st">&quot;blue&quot;</span>, <span class="dt">ylab =</span> <span class="st">&quot;x^2&quot;</span>)</code></pre>
+<div class="figure">
+<img src="figure/unnamed-chunk-3.png" />
+</div>
+</div>
+<div id="adding-back-the-points" class="slide section level1">
+<h1>Adding back the points</h1>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(x, y, <span class="dt">type =</span> <span class="st">&quot;l&quot;</span>, <span class="dt">col =</span> <span class="st">&quot;blue&quot;</span>, <span class="dt">ylab =</span> <span class="st">&quot;x^2&quot;</span>)
+<span class="kw">points</span>(x, y, <span class="dt">col =</span> <span class="st">&quot;red&quot;</span>)</code></pre>
+<div class="figure">
+<img src="figure/unnamed-chunk-4.png" />
+</div>
+</div>
+<div id="some-real-data" class="slide section level1">
+<h1>Some real data</h1>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(iris)</code></pre>
+<pre><code>##   Sepal.Length Sepal.Width Petal.Length Petal.Width Species
+## 1          5.1         3.5          1.4         0.2  setosa
+## 2          4.9         3.0          1.4         0.2  setosa
+## 3          4.7         3.2          1.3         0.2  setosa
+## 4          4.6         3.1          1.5         0.2  setosa
+## 5          5.0         3.6          1.4         0.2  setosa
+## 6          5.4         3.9          1.7         0.4  setosa</code></pre>
+</div>
+<div id="the-graphics-package-boxplots" class="slide section level1">
+<h1>The graphics package: boxplots</h1>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">boxplot</span>(Petal.Length ~<span class="st"> </span>Species, iris)</code></pre>
+<div class="figure">
+<img src="figure/unnamed-chunk-6.png" />
+</div>
+</div>
+<div id="the-graphics-package-bar-graphs" class="slide section level1">
+<h1>The graphics package: bar graphs</h1>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">barplot</span>(<span class="dv">1</span>:<span class="dv">3</span>, <span class="dt">col =</span> <span class="kw">c</span>(<span class="st">&quot;red3&quot;</span>, <span class="st">&quot;darkgreen&quot;</span>, <span class="st">&quot;navyblue&quot;</span>))</code></pre>
+<div class="figure">
+<img src="figure/unnamed-chunk-7.png" />
+</div>
+</div>
+<div id="ggplot2" class="slide section level1">
+<h1>ggplot2</h1>
+<ul>
+<li>The <code>ggplot2</code> library provides an object-oriented, data-centered approach to graphics</li>
+<li>It also produces better-looking graphics by default!</li>
+<li>On the other hand, it takes a bit more work to understand</li>
+</ul>
+</div>
+<div id="scatterplot" class="slide section level1">
+<h1>Scatterplot</h1>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(ggplot2)
+<span class="kw">qplot</span>(Petal.Length, Petal.Width, <span class="dt">data =</span> iris)</code></pre>
+<div class="figure">
+<img src="figure/unnamed-chunk-8.png" />
+</div>
+</div>
+<div id="adding-more-dimensions-using-color" class="slide section level1">
+<h1>Adding more dimensions using color</h1>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">qplot</span>(Petal.Length, Petal.Width, <span class="dt">color =</span> Species, <span class="dt">data =</span> iris)</code></pre>
+<div class="figure">
+<img src="figure/unnamed-chunk-9.png" />
+</div>
+</div>
+<div id="adding-more-dimensions-using-faceting" class="slide section level1">
+<h1>Adding more dimensions using faceting</h1>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">qplot</span>(Petal.Length, Petal.Width, <span class="dt">data =</span> iris) +<span class="st"> </span><span class="kw">facet_wrap</span>(~Species)</code></pre>
+<div class="figure">
+<img src="figure/unnamed-chunk-10.png" />
+</div>
+</div>
+<div id="adding-another-geom" class="slide section level1">
+<h1>Adding another “geom”</h1>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">qplot</span>(Petal.Length, Petal.Width, <span class="dt">color =</span> Species, <span class="dt">data =</span> iris) +<span class="st"> </span><span class="kw">geom_rug</span>()</code></pre>
+<div class="figure">
+<img src="figure/unnamed-chunk-11.png" />
+</div>
+</div>
+<div id="adding-labels-1" class="slide section level1">
+<h1>Adding labels</h1>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">qplot</span>(Petal.Length, Petal.Width, <span class="dt">color =</span> Species, <span class="dt">data =</span> iris) +<span class="st"> </span><span class="kw">geom_rug</span>() +<span class="st"> </span>
+<span class="st">    </span><span class="kw">xlab</span>(<span class="st">&quot;Petal Length&quot;</span>) +<span class="st"> </span><span class="kw">ylab</span>(<span class="st">&quot;Petal Width&quot;</span>) +<span class="st"> </span><span class="kw">ggtitle</span>(<span class="st">&quot;My Plot&quot;</span>)</code></pre>
+<div class="figure">
+<img src="figure/unnamed-chunk-12.png" />
+</div>
+</div>
+<div id="computing-statistics-linear-regression" class="slide section level1">
+<h1>Computing statistics: linear regression</h1>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">qplot</span>(Petal.Length, Petal.Width, <span class="dt">color =</span> Species, <span class="dt">data =</span> iris) +<span class="st"> </span><span class="kw">geom_rug</span>() +<span class="st"> </span>
+<span class="st">    </span><span class="kw">stat_smooth</span>(<span class="dt">method =</span> lm) +<span class="st"> </span><span class="kw">xlab</span>(<span class="st">&quot;Petal Length&quot;</span>) +<span class="st"> </span><span class="kw">ylab</span>(<span class="st">&quot;Petal Width&quot;</span>) +<span class="st"> </span>
+<span class="st">    </span><span class="kw">ggtitle</span>(<span class="st">&quot;My Plot&quot;</span>)</code></pre>
+<div class="figure">
+<img src="figure/unnamed-chunk-13.png" />
+</div>
+</div>
+<div id="computing-statistics-linear-regression-1" class="slide section level1">
+<h1>Computing statistics: linear regression</h1>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">qplot</span>(Petal.Length, Petal.Width, <span class="dt">color =</span> Species, <span class="dt">data =</span> iris) +<span class="st"> </span><span class="kw">geom_rug</span>() +<span class="st"> </span>
+<span class="st">    </span><span class="kw">stat_smooth</span>(<span class="kw">aes</span>(<span class="dt">group =</span> <span class="dv">0</span>), <span class="dt">method =</span> lm) +<span class="st"> </span><span class="kw">xlab</span>(<span class="st">&quot;Petal Length&quot;</span>) +<span class="st"> </span><span class="kw">ylab</span>(<span class="st">&quot;Petal Width&quot;</span>) +<span class="st"> </span>
+<span class="st">    </span><span class="kw">ggtitle</span>(<span class="st">&quot;My Plot&quot;</span>)</code></pre>
+<div class="figure">
+<img src="figure/unnamed-chunk-14.png" />
+</div>
+</div>
+<div id="computing-statistics-2d-kernel-density" class="slide section level1">
+<h1>Computing statistics: 2D kernel density</h1>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">qplot</span>(Petal.Length, Petal.Width, <span class="dt">color =</span> Species, <span class="dt">data =</span> iris) +<span class="st"> </span><span class="kw">geom_rug</span>() +<span class="st"> </span>
+<span class="st">    </span><span class="kw">geom_density2d</span>() +<span class="st"> </span><span class="kw">xlab</span>(<span class="st">&quot;Petal Length&quot;</span>) +<span class="st"> </span><span class="kw">ylab</span>(<span class="st">&quot;Petal Width&quot;</span>) +<span class="st"> </span><span class="kw">ggtitle</span>(<span class="st">&quot;My Plot&quot;</span>)</code></pre>
+<div class="figure">
+<img src="figure/unnamed-chunk-15.png" />
+</div>
+</div>
+<div id="another-syntax" class="slide section level1">
+<h1>Another syntax</h1>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(iris, <span class="kw">aes</span>(Petal.Length, Petal.Width, <span class="dt">color =</span> Species)) +<span class="st"> </span><span class="kw">geom_point</span>()</code></pre>
+<div class="figure">
+<img src="figure/unnamed-chunk-16.png" />
+</div>
+</div>
+<div id="box-plots" class="slide section level1">
+<h1>Box plots</h1>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">qplot</span>(Species, Petal.Length, <span class="dt">data =</span> iris, <span class="dt">geom =</span> <span class="st">&quot;boxplot&quot;</span>)</code></pre>
+<div class="figure">
+<img src="figure/unnamed-chunk-17.png" />
+</div>
+</div>
+<div id="histograms" class="slide section level1">
+<h1>Histograms</h1>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(iris, <span class="kw">aes</span>(Petal.Length)) +<span class="st"> </span><span class="kw">geom_histogram</span>(<span class="dt">binwidth =</span> <span class="fl">0.2</span>) +<span class="st"> </span><span class="kw">facet_wrap</span>(~Species, 
+    <span class="dt">ncol =</span> <span class="dv">1</span>)</code></pre>
+<div class="figure">
+<img src="figure/unnamed-chunk-18.png" />
+</div>
+</div>
+</body>
+</html>

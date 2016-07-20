@@ -1,0 +1,243 @@
+<style>
+  .reveal pre {
+    font-size: 13pt;
+    color: blue;
+  }
+  .reveal section p {
+    font-size: 32pt;
+  }
+  .reveal div {
+    font-size: 30pt;
+  }
+  .reveal h3 {
+    color: #484848;
+    font-weight: 150%;
+  }
+</style>
+
+
+R Lunch and Learn 1
+========================================================
+author: DeMel Mojica
+date: Thursday 07-7-16
+font-family: Garamond
+autosize: false
+width:1440
+height:900
+
+
+# Introduction to Statistical Developement in R: Dev Tools, Data Types, Control Structures, Some Use Cases.
+
+Outline
+========================================================
+
+
+## Why R, and R Paradigm
+## R Overview
+## R Interface
+## R Workspace
+
+## R Packages
+## Input/Output
+## Reusing Results
+## References, Tutorials and links
+
+
+Why R?
+========================================================
+
+- It's *free!* 
+
+- It runs on a *variety of platforms* including Windows, Unix and MacOS. 
+
+- It's virtually *backend agnostic.*
+
+- It provides an unparalleled platform for programming new statistical methods in an easy and straightforward manner. 
+
+- It contains *advanced statistical routines* not yet available in other languages. 
+
+- It has state-of-the-art graphics capabilities. 
+
+What is R?
+========================================================
+
+* R is a high-level computer language and environment for statistics and graphics
+
+* Performs a variety of simple and advanced statistical methods
+
+* Written in C.
+
+* R is a functional language with some OO features, so we can write new functions that extends R’s uses.
+
+* R was initially written by Ross Ihaka and Robert Gentleman at the Department of Statistics of the University of Auckland in Auckland, New Zealand (hence the name).
+
+* R is a free open source software maintained by several contributors. Including an “R Core Team” of 17 programmers who are responsible for modifying the R source code.
+
+* The official R home page is 
+[http://www.R-project.org](http://www.R-project.org)
+
+
+R Overview
+========================================================
+* You can enter commands one at a time at the command prompt (>) or run a set of commands from a source file. 
+There is a wide variety of data types, including vectors (numerical, character, logical), matrices, dataframes, and lists. 
+* To quit R, use 
+
+```{r, eval=FALSE}
+>q()
+```
+
+R Overview
+========================================================
+- A key skill to using R effectively is learning how to use the built-in help system. 
+  + Other sections describe 
+  + The working environment, 
+  + Inputting programs and outputting results, 
+  + Installing new functionality through packages etc. 
+
+### A fundamental design feature of R is that the output from most functions can be used as input to other functions. 
+
+
+R Introduction
+========================================================
+
+- These objects can then be used in other calculations. To print the object just enter the name of the object. There are some restrictions when giving an object a name:
+  
+  + Object names cannot contain `strange' symbols like !, +, -, #.
+  
+  + A dot (.) and an underscore ( ) are allowed, also a name starting with a dot.
+  
+  + Object names can contain a number but cannot start with a number.
+  
+  + R is case sensitive, X and x are two different objects, as well as *temp* and *temP*.
+
+Objects and Functions
+========================================================
+
+- What we normally do is create objects and then perform functions on those objects 
+(functions are also considered objects, more on this later).
+  + Assign an object a name "x" using either 
+  + ```{r, eval=FALSE} x <- object (object -> x) ```
+  + ```{r, eval=FALSE} x = object ```
+
+- Call a function by
+  + Function name(list of arguments separated by commas)
+
+Objects and Functions
+========================================================
+
+- Each function has a set of formal arguments some with default values; these can be found in the function’s documentation.
+
+- A function call can include any subset of the complete argument list.
+
+- To specify a particular argument use the argument’s name.
+
+- Arguments do not have to be named if they are entered in the same order as the function’s formal argument list. However, to make your code easier to understand it is usually a good idea to name your arguments.
+
+
+R has a Steep Learning Curve 
+========================================================
+
+### (less steep for those who know functional programming)
+
+*Reason 1*: R’s advanced functionality comes from hundreds of user contributed packages. Hunting for what you want can be time consuming, and it can be hard to get a clear overview of what procedures are available. 
+
+*Reason 2*: There are many introductory tutorials (covering data types, basic commands, the interface). However, none alone are comprehensive. *(See Reason 1)*
+
+
+So What's a Package??
+========================================================
+
+- One of the strengths of R is that the system can *easily be extended*. 
+
+- The system allows you to write new functions and package those functions in a so called `R package' (or `R library'). 
+
+The R package may also contain other R objects, for example data sets or documentation. 
+
+There is a lively R user community and many R packages have been written and made available on [CRAN](http://cran.us.r-project.org/) for other users. 
+
+*Just a few examples*: there are packages for portfolio optimization, drawing maps, exporting objects to html, time series analysis, spatial statistics and the list goes on and on. 
+
+[CRAN Package List](https://cran.r-project.org/web/packages/available_packages_by_name.html)
+
+[CRAN Task Views](https://cran.r-project.org/web/views/)
+
+- For a useful shortlist of R packages see: 
+[Quick list of useful R packages](https://support.rstudio.com/hc/en-us/articles/201057987-Quick-list-of-useful-R-packages)
+
+
+
+IDE: Rstudio
+========================================================
+
+- RStudio is an integrated development environment (IDE) for R. It includes a console, syntax-highlighting editor that supports direct code execution, as well as tools for plotting, history, debugging and workspace management. 
+
+
+* [RStudio Desktop](https://www.rstudio.com/products/rstudio/#Desktop)
+
+* [RStudio Feature List](https://www.rstudio.com/products/rstudio/features/)
+
+
+Visualizations Tools
+========================================================
+
+ - [Shiny](http://shiny.rstudio.com/gallery/)
+
+ - [Radiant](http://vnijs.github.io/radiant/)
+
+ - [H20 Flow](https://github.com/h2oai/h2o-flow)
+
+ - [Flexdashboard](https://github.com/rstudio/flexdashboard)
+ 
+ - [htmlwidgets](http://www.htmlwidgets.org/showcase_leaflet.html)
+ 
+ - [rCharts](http://rcharts.io/gallery/)
+
+Flexdashboard
+========================================================
+
+- [NBA Scoring (2008)](https://beta.rstudioconnect.com/jjallaire/htmlwidgets-d3heatmap/)
+
+- [ggplotly geoms](https://beta.rstudioconnect.com/jjallaire/htmlwidgets-ggplotly-geoms/)
+
+- [Gene Expression Biclustering](https://jjallaire.shinyapps.io/shiny-biclust/)
+
+
+Backend Connections
+========================================================
+
+- [RSQLServer](https://github.com/imanuelcostigan/RSQLServer)
+
+- [SparkR](https://github.com/amplab-extras/SparkR-pkg)
+
+- [General HDFS](https://github.com/prestodb/RPresto)
+
+- [RNeo4j](https://github.com/nicolewhite/RNeo4j)
+
+Parsers:
+========================================================
+
+- [RJSON](https://github.com/dogada/RJSON)
+
+- [jsonlite](https://github.com/jeroenooms/jsonlite)
+
+Example Data Sets
+========================================================
+
+- [Sentiment Analysis](https://github.com/trinker/sentimentr)
+
+- [OKCupid](http://www.amstat.org/publications/jse/v23n2/kim.pdf)
+
+- [Titanic Kaggle Competition](https://www.kaggle.com/benhamner/titanic/random-forest-benchmark-r/output)
+
+- [US Census Bureau International Data Base API](https://github.com/walkerke/idbr)
+
+
+CheetSheets
+========================================================
+
+- [Data Wrangling](https://www.rstudio.com/wp-content/uploads/2015/02/data-wrangling-cheatsheet.pdf)
+
+- [Markdown Cheatsheet](http://www.rstudio.com/wp-content/uploads/2016/03/rmarkdown-cheatsheet-2.0.pdf)
+
+- [R Markdown Reference Guide](https://www.rstudio.com/wp-content/uploads/2015/03/rmarkdown-reference.pdf)

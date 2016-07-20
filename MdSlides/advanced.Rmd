@@ -1,0 +1,175 @@
+% Advanced Programming
+
+# Classes and Methods
+
+```{r}
+species.counts <- table(iris$Species)
+print(species.counts)
+my.formula <- Petal.Length ~ Petal.Width
+print(my.formula)
+my.reg <- lm(my.formula, data=iris)
+print(my.reg)
+```
+
+- How does the `print` function know what to print in each of these cases?
+
+# Classes and Methods
+
+- `print` is actually a *generic method*
+- A `print` function is actually defined for each of many different R *classes*
+- Think of a class as an extension of data type
+- You can define your own classes!
+
+```{r}
+class(species.counts)
+class(my.formula)
+class(my.reg)
+```
+
+# Generic Methods
+
+```{r}
+print
+print.lm
+```
+
+# Classes
+
+- Some languages heavily emphasize classes, and, more broadly, object-oriented programming
+- R is not like this
+- In fact, R's class system is...complicated, with a long and twisted history
+- You may encounter the terms *S3*, *S4*, and *reference classes* (or "R5"); these are R's three different class systems
+- You will mostly encounter S3 classes, which are simple (good and bad)
+
+# S3 Classes
+
+- Say we have some simulation results that we want to save
+- We also want to save the seed used to produce the results
+```{r}
+seed <- 123
+set.seed(seed)
+x <- rnorm(10)
+my.sim <- list(seed=seed, draws=x)
+class(my.sim)
+print(my.sim)
+```
+
+# S3 Classes
+
+- We could change the class!
+```{r}
+class(my.sim) <- "sim.res"
+class(my.sim)
+```
+
+# S3 Classes
+
+- We could even define a print method for this class
+
+```{r}
+print.sim.res <- function(sim.res) {
+  cat("Seed:", sim.res$seed, "\n")
+  cat("Draws:\n")
+  print(sim.res$draws)
+}
+print(my.sim)
+```
+
+# Attributes
+
+- Alternatively, we could have stored the seed in an *attribute*
+
+```{r}
+my.draws <- x
+attr(my.draws, "seed") <- seed
+my.draws
+```
+
+# Examining structure
+
+```{r}
+str(my.sim)
+str(my.draws)
+```
+
+# Warnings and Errors
+
+- Sometimes (or maybe often) things don't go smoothly
+
+```{r}
+1:10 + 1:3
+matrix(1:10, ncol=2) %*% matrix(1:3, ncol=3)
+```
+
+- *Warnings* are displayed to the user, while *errors* also stop execution
+
+# Generating warnings
+
+```{r}
+find.most.freq <- function(x) {
+  counts <- table(x)
+  names(counts)[which.max(counts)]
+}
+nums <- c(1, 2, 3, 4, 4, 4, 5, 5, 6)
+find.most.freq(nums)
+nums <- c(nums, NA)
+find.most.freq(nums)
+```
+- Should we alert the user to the presence of NAs?
+
+# Generating warnings
+
+```{r}
+find.most.freq <- function(x) {
+  if (any(is.na(x))) {
+    warning("x contains NA")
+  }
+  counts <- table(x)
+  names(counts)[which.max(counts)]
+}
+find.most.freq(nums)
+```
+
+# Generating errors
+
+```{r}
+find.most.freq <- function(x) {
+  if (any(is.na(x))) {
+    stop("x contains NA")
+  }
+  counts <- table(x)
+  names(counts)[which.max(counts)]
+}
+find.most.freq(nums)
+```
+
+# Handling warnings
+
+- Just pay attention! R is trying to tell you something important
+- But if you have good reason to ignore the warning:
+```{r}
+suppressWarnings(1:10 + 1:3)
+```
+
+# Handling errors
+
+- You can continue execution, essentially ignoring the error:
+```{r}
+try(matrix(1:10, ncol=2) %*% matrix(1:3, ncol=3))
+```
+
+- Or provide some sort of action to take in response:
+```{r}
+tryCatch(matrix(1:10, ncol=2) %*% matrix(1:3, ncol=3),
+         error = function(e) print("Shouldn't have done that!"))
+```
+
+# Debugging
+
+- You can stop execution and enter the debugger by calling the `browser` function
+- You can also debug an entire function by passing the function to `debug`
+- It's possible to locate the source of an error by calling the `traceback` function
+- Sometimes, it's easiest to tell R that you want to enter the debugger automatically when an error is thrown:
+```{r}
+options(error=recover)
+```

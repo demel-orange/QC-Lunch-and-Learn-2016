@@ -1,0 +1,97 @@
+% Data Manipulation
+% with the iris dataset
+
+# Motivation
+
+Consider the `iris` dataset.
+```{r}
+head(iris)
+```
+
+# Motivation
+
+We can produce a basic summary of the dataset with `summary`:
+```{r}
+summary(iris)
+```
+But what if this particular summary doesn't suit us? What if we're interested in, for example, additional quantiles for the numeric variables? Or what if we want to produce a histogram for each variable?
+
+# A repetitive solution
+We could perform operations manually on each variable:
+```{r, echo=FALSE}
+library(ggplot2)
+```
+```{r, fig.cap=''}
+mean.sepal.length <- mean(iris$Sepal.Length)
+sepal.length.lower <- quantile(iris$Sepal.Length, 0.05)
+sepal.length.upper <- quantile(iris$Sepal.Length, 0.95)
+qplot(Sepal.Length, data=iris, binwidth=0.2)
+```
+Etc.
+
+# A slightly better solution
+But what if we later need to tweak the histogram? Or change the quantiles? We'd have to do this multiple times! A better solution would be to define a function that performs all the needed operations on a parameter. For example:
+
+```{r}
+calc.mean.and.quantiles <- function(x) {
+  c(mean=mean(x), quantile(x, 0.05), quantile(x, 0.95))
+}
+calc.mean.and.quantiles(iris$Sepal.Length)
+calc.mean.and.quantiles(iris$Sepal.Width)
+```
+
+This works fine for small datasets, but what if we don't even know the variable names? Or what if there are too many?
+
+# A more general solution
+
+The data is currently in *wide* form, with a column for each variable. We can put it in *long* form, with a column for variable names and another column for values. The best library for this is `reshape2`.
+
+```{r}
+library(reshape2)
+iris.long <- melt(iris, "Species")
+head(iris.long)
+```
+
+# Immediate payoff
+
+```{r, fig.cap=''}
+qplot(value, data=iris.long, binwidth=0.2) + facet_wrap(~ variable)
+```
+
+# Immediate payoff
+
+```{r, fig.cap=''}
+qplot(value, data=iris.long, binwidth=0.2) + facet_grid(Species ~ variable)
+```
+How many lines would this take if another method were used?
+
+# Summary statistics
+
+```{r}
+tapply(iris.long$value, iris.long$variable, function(x) {
+  c(mean=mean(x), quantile(x, 0.05), quantile(x, 0.95))
+})
+```
+
+# Summary Statistics with plyr
+
+```{r}
+library(plyr)
+ddply(iris.long, .(variable), function(x) {
+  c(mean=mean(x$value), quantile(x$value, 0.05), quantile(x$value, 0.95))
+})
+```
+
+# Summary Statistics with plyr
+
+```{r}
+ddply(iris.long, .(variable), summarize,
+      mean=mean(value), lower=quantile(value, 0.05), upper=quantile(value, 0.95))
+```
+
+# Summary Statistics with plyr
+
+```{r}
+ddply(iris.long, .(variable, Species), summarize,
+      mean=mean(value), lower=quantile(value, 0.05), upper=quantile(value, 0.95))
+```

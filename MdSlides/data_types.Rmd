@@ -1,0 +1,61 @@
+% Data Types and Modes
+
+# Modes
+
+- R has a handful of simplified (in comparison to other languages, and to the true underlying data type) data types called *modes*
+- Some important ones are numeric, logical, character, and factor
+
+# Numeric
+
+- The *numeric* mode handles numbers (integers and doubles)
+```{r}
+mode(1)
+mode(1e5)
+mode(pi)
+```
+
+# Logical
+
+- The *logical* mode handles true or false values (booleans, in other languages)
+```{r}
+mode(TRUE)
+5 > 8
+mode(5 > 8)
+```
+
+# Character
+
+- The *character* mode handles string data
+```{r}
+mode('John Doe')
+mode(as.character(9))
+```
+
+# Factor
+
+- Sometimes you'll want to divide your data into categories
+- The *factor* mode is useful here
+- You're able to specify valid *levels* (categories) of the factor
+```{r}
+grade.levels <- c("A", "B", "C", "D", "F")
+my.grades <- factor(c("A", "B", "B", "B", "F", "D", "A"), grade.levels)
+my.grades
+```
+
+# Handling missing data
+
+- In many situations, you'll have missing data; how do you represent this?
+- This is what *NA* is for
+```{r}
+ages <- c(26, NA, 23, 30)
+is.na(ages)
+mean(ages)
+mean(ages, na.rm=TRUE)
+```
+
+# Comparing NAs
+
+```{r}
+4 + NA
+5 > NA
+```

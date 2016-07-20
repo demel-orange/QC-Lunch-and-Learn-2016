@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="Content-Style-Type" content="text/css" />
+  <meta name="generator" content="pandoc" />
+  <title>Advanced Programming</title>
+  <style type="text/css">code{white-space: pre;}</style>
+  <style type="text/css">
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; }
+code > span.dt { color: #902000; }
+code > span.dv { color: #40a070; }
+code > span.bn { color: #40a070; }
+code > span.fl { color: #40a070; }
+code > span.ch { color: #4070a0; }
+code > span.st { color: #4070a0; }
+code > span.co { color: #60a0b0; font-style: italic; }
+code > span.ot { color: #007020; }
+code > span.al { color: #ff0000; font-weight: bold; }
+code > span.fu { color: #06287e; }
+code > span.er { color: #ff0000; font-weight: bold; }
+  </style>
+  <link rel="stylesheet" type="text/css" media="screen, projection, print"
+    href="http://www.w3.org/Talks/Tools/Slidy2/styles/slidy.css" />
+  <script src="http://www.w3.org/Talks/Tools/Slidy2/scripts/slidy.js.gz"
+    charset="utf-8" type="text/javascript"></script>
+</head>
+<body>
+<div class="slide titlepage">
+  <h1 class="title">Advanced Programming</h1>
+  <p class="author">
+
+  </p>
+</div>
+<div id="classes-and-methods" class="slide section level1">
+<h1>Classes and Methods</h1>
+<pre class="sourceCode r"><code class="sourceCode r">species.counts &lt;-<span class="st"> </span><span class="kw">table</span>(iris$Species)
+<span class="kw">print</span>(species.counts)</code></pre>
+<pre><code>## 
+##     setosa versicolor  virginica 
+##         50         50         50</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">my.formula &lt;-<span class="st"> </span>Petal.Length ~<span class="st"> </span>Petal.Width
+<span class="kw">print</span>(my.formula)</code></pre>
+<pre><code>## Petal.Length ~ Petal.Width</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">my.reg &lt;-<span class="st"> </span><span class="kw">lm</span>(my.formula, <span class="dt">data =</span> iris)
+<span class="kw">print</span>(my.reg)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = my.formula, data = iris)
+## 
+## Coefficients:
+## (Intercept)  Petal.Width  
+##        1.08         2.23</code></pre>
+<ul>
+<li>How does the <code>print</code> function know what to print in each of these cases?</li>
+</ul>
+</div>
+<div id="classes-and-methods-1" class="slide section level1">
+<h1>Classes and Methods</h1>
+<ul>
+<li><code>print</code> is actually a <em>generic method</em></li>
+<li>A <code>print</code> function is actually defined for each of many different R <em>classes</em></li>
+<li>Think of a class as an extension of data type</li>
+<li>You can define your own classes!</li>
+</ul>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">class</span>(species.counts)</code></pre>
+<pre><code>## [1] &quot;table&quot;</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">class</span>(my.formula)</code></pre>
+<pre><code>## [1] &quot;formula&quot;</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">class</span>(my.reg)</code></pre>
+<pre><code>## [1] &quot;lm&quot;</code></pre>
+</div>
+<div id="generic-methods" class="slide section level1">
+<h1>Generic Methods</h1>
+<pre class="sourceCode r"><code class="sourceCode r">print</code></pre>
+<pre><code>## function (x, ...) 
+## UseMethod(&quot;print&quot;)
+## &lt;bytecode: 0x041342e0&gt;
+## &lt;environment: namespace:base&gt;</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">print.lm</code></pre>
+<pre><code>## function (x, digits = max(3L, getOption(&quot;digits&quot;) - 3L), ...) 
+## {
+##     cat(&quot;\nCall:\n&quot;, paste(deparse(x$call), sep = &quot;\n&quot;, collapse = &quot;\n&quot;), 
+##         &quot;\n\n&quot;, sep = &quot;&quot;)
+##     if (length(coef(x))) {
+##         cat(&quot;Coefficients:\n&quot;)
+##         print.default(format(coef(x), digits = digits), print.gap = 2L, 
+##             quote = FALSE)
+##     }
+##     else cat(&quot;No coefficients\n&quot;)
+##     cat(&quot;\n&quot;)
+##     invisible(x)
+## }
+## &lt;bytecode: 0x02e8e96c&gt;
+## &lt;environment: namespace:stats&gt;</code></pre>
+</div>
+<div id="classes" class="slide section level1">
+<h1>Classes</h1>
+<ul>
+<li>Some languages heavily emphasize classes, and, more broadly, object-oriented programming</li>
+<li>R is not like this</li>
+<li>In fact, R’s class system is…complicated, with a long and twisted history</li>
+<li>You may encounter the terms <em>S3</em>, <em>S4</em>, and <em>reference classes</em> (or “R5”); these are R’s three different class systems</li>
+<li>You will mostly encounter S3 classes, which are simple (good and bad)</li>
+</ul>
+</div>
+<div id="s3-classes" class="slide section level1">
+<h1>S3 Classes</h1>
+<ul>
+<li>Say we have some simulation results that we want to save</li>
+<li>We also want to save the seed used to produce the results</li>
+</ul>
+<pre class="sourceCode r"><code class="sourceCode r">seed &lt;-<span class="st"> </span><span class="dv">123</span>
+<span class="kw">set.seed</span>(seed)
+x &lt;-<span class="st"> </span><span class="kw">rnorm</span>(<span class="dv">10</span>)
+my.sim &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">seed =</span> seed, <span class="dt">draws =</span> x)
+<span class="kw">class</span>(my.sim)</code></pre>
+<pre><code>## [1] &quot;list&quot;</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">print</span>(my.sim)</code></pre>
+<pre><code>## $seed
+## [1] 123
+## 
+## $draws
+##  [1] -0.56048 -0.23018  1.55871  0.07051  0.12929  1.71506  0.46092
+##  [8] -1.26506 -0.68685 -0.44566</code></pre>
+</div>
+<div id="s3-classes-1" class="slide section level1">
+<h1>S3 Classes</h1>
+<ul>
+<li>We could change the class!</li>
+</ul>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">class</span>(my.sim) &lt;-<span class="st"> &quot;sim.res&quot;</span>
+<span class="kw">class</span>(my.sim)</code></pre>
+<pre><code>## [1] &quot;sim.res&quot;</code></pre>
+</div>
+<div id="s3-classes-2" class="slide section level1">
+<h1>S3 Classes</h1>
+<ul>
+<li>We could even define a print method for this class</li>
+</ul>
+<pre class="sourceCode r"><code class="sourceCode r">print.sim.res &lt;-<span class="st"> </span>function(sim.res) {
+    <span class="kw">cat</span>(<span class="st">&quot;Seed:&quot;</span>, sim.res$seed, <span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>)
+    <span class="kw">cat</span>(<span class="st">&quot;Draws:</span><span class="ch">\n</span><span class="st">&quot;</span>)
+    <span class="kw">print</span>(sim.res$draws)
+}
+<span class="kw">print</span>(my.sim)</code></pre>
+<pre><code>## Seed: 123 
+## Draws:
+##  [1] -0.56048 -0.23018  1.55871  0.07051  0.12929  1.71506  0.46092
+##  [8] -1.26506 -0.68685 -0.44566</code></pre>
+</div>
+<div id="attributes" class="slide section level1">
+<h1>Attributes</h1>
+<ul>
+<li>Alternatively, we could have stored the seed in an <em>attribute</em></li>
+</ul>
+<pre class="sourceCode r"><code class="sourceCode r">my.draws &lt;-<span class="st"> </span>x
+<span class="kw">attr</span>(my.draws, <span class="st">&quot;seed&quot;</span>) &lt;-<span class="st"> </span>seed
+my.draws</code></pre>
+<pre><code>##  [1] -0.56048 -0.23018  1.55871  0.07051  0.12929  1.71506  0.46092
+##  [8] -1.26506 -0.68685 -0.44566
+## attr(,&quot;seed&quot;)
+## [1] 123</code></pre>
+</div>
+<div id="examining-structure" class="slide section level1">
+<h1>Examining structure</h1>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">str</span>(my.sim)</code></pre>
+<pre><code>## List of 2
+##  $ seed : num 123
+##  $ draws: num [1:10] -0.5605 -0.2302 1.5587 0.0705 0.1293 ...
+##  - attr(*, &quot;class&quot;)= chr &quot;sim.res&quot;</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">str</span>(my.draws)</code></pre>
+<pre><code>##  atomic [1:10] -0.5605 -0.2302 1.5587 0.0705 0.1293 ...
+##  - attr(*, &quot;seed&quot;)= num 123</code></pre>
+</div>
+<div id="warnings-and-errors" class="slide section level1">
+<h1>Warnings and Errors</h1>
+<ul>
+<li>Sometimes (or maybe often) things don’t go smoothly</li>
+</ul>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="dv">1</span>:<span class="dv">10</span> +<span class="st"> </span><span class="dv">1</span>:<span class="dv">3</span></code></pre>
+<pre><code>## Warning: longer object length is not a multiple of shorter object length</code></pre>
+<pre><code>##  [1]  2  4  6  5  7  9  8 10 12 11</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">matrix</span>(<span class="dv">1</span>:<span class="dv">10</span>, <span class="dt">ncol =</span> <span class="dv">2</span>) %*%<span class="st"> </span><span class="kw">matrix</span>(<span class="dv">1</span>:<span class="dv">3</span>, <span class="dt">ncol =</span> <span class="dv">3</span>)</code></pre>
+<pre><code>## Error: non-conformable arguments</code></pre>
+<ul>
+<li><em>Warnings</em> are displayed to the user, while <em>errors</em> also stop execution</li>
+</ul>
+</div>
+<div id="generating-warnings" class="slide section level1">
+<h1>Generating warnings</h1>
+<pre class="sourceCode r"><code class="sourceCode r">find.most.freq &lt;-<span class="st"> </span>function(x) {
+    counts &lt;-<span class="st"> </span><span class="kw">table</span>(x)
+    <span class="kw">names</span>(counts)[<span class="kw">which.max</span>(counts)]
+}
+nums &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">4</span>, <span class="dv">4</span>, <span class="dv">5</span>, <span class="dv">5</span>, <span class="dv">6</span>)
+<span class="kw">find.most.freq</span>(nums)</code></pre>
+<pre><code>## [1] &quot;4&quot;</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">nums &lt;-<span class="st"> </span><span class="kw">c</span>(nums, <span class="ot">NA</span>)
+<span class="kw">find.most.freq</span>(nums)</code></pre>
+<pre><code>## [1] &quot;4&quot;</code></pre>
+<ul>
+<li>Should we say something about the NAs?</li>
+</ul>
+</div>
+<div id="generating-warnings-1" class="slide section level1">
+<h1>Generating warnings</h1>
+<pre class="sourceCode r"><code class="sourceCode r">find.most.freq &lt;-<span class="st"> </span>function(x) {
+    if (<span class="kw">any</span>(<span class="kw">is.na</span>(x))) {
+        <span class="kw">warning</span>(<span class="st">&quot;x contains NA&quot;</span>)
+    }
+    counts &lt;-<span class="st"> </span><span class="kw">table</span>(x)
+    <span class="kw">names</span>(counts)[<span class="kw">which.max</span>(counts)]
+}
+<span class="kw">find.most.freq</span>(nums)</code></pre>
+<pre><code>## Warning: x contains NA</code></pre>
+<pre><code>## [1] &quot;4&quot;</code></pre>
+</div>
+<div id="generating-errors" class="slide section level1">
+<h1>Generating errors</h1>
+<pre class="sourceCode r"><code class="sourceCode r">find.most.freq &lt;-<span class="st"> </span>function(x) {
+    if (<span class="kw">any</span>(<span class="kw">is.na</span>(x))) {
+        <span class="kw">stop</span>(<span class="st">&quot;x contains NA&quot;</span>)
+    }
+    counts &lt;-<span class="st"> </span><span class="kw">table</span>(x)
+    <span class="kw">names</span>(counts)[<span class="kw">which.max</span>(counts)]
+}
+<span class="kw">find.most.freq</span>(nums)</code></pre>
+<pre><code>## Error: x contains NA</code></pre>
+</div>
+<div id="handling-warnings" class="slide section level1">
+<h1>Handling warnings</h1>
+<ul>
+<li>Just pay attention! R is trying to tell you something important</li>
+<li>But if you have good reason to ignore the warning:</li>
+</ul>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">suppressWarnings</span>(<span class="dv">1</span>:<span class="dv">10</span> +<span class="st"> </span><span class="dv">1</span>:<span class="dv">3</span>)</code></pre>
+<pre><code>##  [1]  2  4  6  5  7  9  8 10 12 11</code></pre>
+</div>
+<div id="handling-errors" class="slide section level1">
+<h1>Handling errors</h1>
+<ul>
+<li>You can continue execution, essentially ignoring the error:</li>
+</ul>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">try</span>(<span class="kw">matrix</span>(<span class="dv">1</span>:<span class="dv">10</span>, <span class="dt">ncol =</span> <span class="dv">2</span>) %*%<span class="st"> </span><span class="kw">matrix</span>(<span class="dv">1</span>:<span class="dv">3</span>, <span class="dt">ncol =</span> <span class="dv">3</span>))</code></pre>
+<ul>
+<li>Or provide some sort of action to take in response:</li>
+</ul>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">tryCatch</span>(<span class="kw">matrix</span>(<span class="dv">1</span>:<span class="dv">10</span>, <span class="dt">ncol =</span> <span class="dv">2</span>) %*%<span class="st"> </span><span class="kw">matrix</span>(<span class="dv">1</span>:<span class="dv">3</span>, <span class="dt">ncol =</span> <span class="dv">3</span>), <span class="dt">error =</span> function(e) <span class="kw">print</span>(<span class="st">&quot;Shouldn&#39;t have done that!&quot;</span>))</code></pre>
+<pre><code>## [1] &quot;Shouldn&#39;t have done that!&quot;</code></pre>
+</div>
+<div id="debugging" class="slide section level1">
+<h1>Debugging</h1>
+<ul>
+<li>You can stop execution and enter the debugger by calling the <code>browser</code> function</li>
+<li>You can also debug an entire function by passing the function to <code>debug</code></li>
+<li>It’s possible to locate the source of an error by calling the <code>traceback</code> function</li>
+<li>Sometimes, it’s easiest to tell R that you want to enter the debugger automatically when an error is thrown:</li>
+</ul>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">options</span>(<span class="dt">error =</span> recover)</code></pre>
+</div>
+</body>
+</html>

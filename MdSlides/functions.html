@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="Content-Style-Type" content="text/css" />
+  <meta name="generator" content="pandoc" />
+  <title>Functions</title>
+  <style type="text/css">code{white-space: pre;}</style>
+  <style type="text/css">
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; }
+code > span.dt { color: #902000; }
+code > span.dv { color: #40a070; }
+code > span.bn { color: #40a070; }
+code > span.fl { color: #40a070; }
+code > span.ch { color: #4070a0; }
+code > span.st { color: #4070a0; }
+code > span.co { color: #60a0b0; font-style: italic; }
+code > span.ot { color: #007020; }
+code > span.al { color: #ff0000; font-weight: bold; }
+code > span.fu { color: #06287e; }
+code > span.er { color: #ff0000; font-weight: bold; }
+  </style>
+  <link rel="stylesheet" type="text/css" media="screen, projection, print"
+    href="http://www.w3.org/Talks/Tools/Slidy2/styles/slidy.css" />
+  <script src="http://www.w3.org/Talks/Tools/Slidy2/scripts/slidy.js.gz"
+    charset="utf-8" type="text/javascript"></script>
+</head>
+<body>
+<div class="slide titlepage">
+  <h1 class="title">Functions</h1>
+  <p class="author">
+
+  </p>
+</div>
+<div id="user-defined-functions" class="slide section level1">
+<h1>User-defined Functions</h1>
+<ul>
+<li>To define your own function, use the <em>function</em> function:</li>
+</ul>
+<pre class="sourceCode r"><code class="sourceCode r">square &lt;-<span class="st"> </span>function(x) x^<span class="dv">2</span>
+<span class="kw">square</span>(<span class="dv">5</span>)</code></pre>
+<pre><code>## [1] 25</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">square</span>(<span class="dv">8</span>)</code></pre>
+<pre><code>## [1] 64</code></pre>
+<ul>
+<li>Function definition is in the form function(arglist) expr</li>
+</ul>
+</div>
+<div id="longer-functions" class="slide section level1">
+<h1>Longer functions</h1>
+<ul>
+<li>For longer functions (more than one line), the expression can be bracketed</li>
+<li>Even for shorter functions, this can make things more readable</li>
+</ul>
+<pre class="sourceCode r"><code class="sourceCode r">square &lt;-<span class="st"> </span>function(x) {
+    x^<span class="dv">2</span>
+}</code></pre>
+</div>
+<div id="return-values" class="slide section level1">
+<h1>Return values</h1>
+<ul>
+<li>You can use the return function to explicitly return values</li>
+</ul>
+<pre class="sourceCode r"><code class="sourceCode r">square &lt;-<span class="st"> </span>function(x) {
+    <span class="kw">return</span>(x^<span class="dv">2</span>)
+}</code></pre>
+<ul>
+<li>Otherwise, the last evaluated expression is returned, as we’ve seen above</li>
+</ul>
+</div>
+<div id="return-values-continued" class="slide section level1">
+<h1>Return values, continued</h1>
+<ul>
+<li>Return is particularly useful for early exits</li>
+</ul>
+<pre class="sourceCode r"><code class="sourceCode r">square &lt;-<span class="st"> </span>function(x) {
+    if (!<span class="kw">is.numeric</span>(x)) {
+        <span class="kw">return</span>(<span class="ot">NaN</span>)
+    }
+    x^<span class="dv">2</span>
+}
+<span class="kw">square</span>(<span class="dv">6</span>)</code></pre>
+<pre><code>## [1] 36</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">square</span>(<span class="st">&quot;R&quot;</span>)</code></pre>
+<pre><code>## [1] NaN</code></pre>
+</div>
+<div id="multiple-arguments" class="slide section level1">
+<h1>Multiple arguments</h1>
+<ul>
+<li>Functions can, of course, operate on multiple arguments</li>
+</ul>
+<pre class="sourceCode r"><code class="sourceCode r">sum.of.squares &lt;-<span class="st"> </span>function(x, y) {
+    <span class="kw">sum</span>(x^<span class="dv">2</span> +<span class="st"> </span>y^<span class="dv">2</span>)
+}
+<span class="kw">sum.of.squares</span>(<span class="dv">5</span>, <span class="dv">10</span>)</code></pre>
+<pre><code>## [1] 125</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sum.of.squares</span>(<span class="dt">x =</span> <span class="dv">5</span>, <span class="dt">y =</span> <span class="dv">10</span>)</code></pre>
+<pre><code>## [1] 125</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sum.of.squares</span>(<span class="dt">y =</span> <span class="dv">10</span>, <span class="dt">x =</span> <span class="dv">5</span>)</code></pre>
+<pre><code>## [1] 125</code></pre>
+</div>
+<div id="default-values" class="slide section level1">
+<h1>Default values</h1>
+<ul>
+<li>You can also specify default values for arguments</li>
+</ul>
+<pre class="sourceCode r"><code class="sourceCode r">sum.of.squares &lt;-<span class="st"> </span>function(x, <span class="dt">y =</span> <span class="dv">0</span>) {
+    <span class="kw">sum</span>(x^<span class="dv">2</span> +<span class="st"> </span>y^<span class="dv">2</span>)
+}
+<span class="kw">sum.of.squares</span>(<span class="dv">5</span>)</code></pre>
+<pre><code>## [1] 25</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sum.of.squares</span>(<span class="dv">5</span>, <span class="dv">0</span>)</code></pre>
+<pre><code>## [1] 25</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sum.of.squares</span>(<span class="dv">5</span>, <span class="dv">10</span>)</code></pre>
+<pre><code>## [1] 125</code></pre>
+</div>
+<div id="variable-scope" class="slide section level1">
+<h1>Variable scope</h1>
+<ul>
+<li>Generally, variables created in functions only exist within that function, even if they have the same name as an existing variable</li>
+</ul>
+<pre class="sourceCode r"><code class="sourceCode r">x &lt;-<span class="st"> </span><span class="dv">5</span>
+my.fun &lt;-<span class="st"> </span>function() {
+    x &lt;-<span class="st"> </span><span class="dv">25</span>
+}
+<span class="kw">my.fun</span>()
+x</code></pre>
+<pre><code>## [1] 5</code></pre>
+</div>
+<div id="variable-scope-continued" class="slide section level1">
+<h1>Variable scope, continued</h1>
+<ul>
+<li>However, it is possible to assign to variables in the outer environment</li>
+</ul>
+<pre class="sourceCode r"><code class="sourceCode r">x &lt;-<span class="st"> </span><span class="dv">5</span>
+my.fun &lt;-<span class="st"> </span>function() {
+    x &lt;&lt;-<span class="st"> </span><span class="dv">25</span>
+}
+<span class="kw">my.fun</span>()
+x</code></pre>
+<pre><code>## [1] 25</code></pre>
+<ul>
+<li>But you generally shouldn’t need to do this!</li>
+<li>The exact workings of this are actually somewhat complex</li>
+</ul>
+</div>
+<div id="lexical-scoping" class="slide section level1">
+<h1>Lexical scoping</h1>
+<ul>
+<li>R uses <em>lexical scoping</em></li>
+<li>Basically, a variable exists within a given environment but not outside of that environment</li>
+<li>The previous example covers most of what you <em>need</em> to know, but there’s more to scoping</li>
+</ul>
+</div>
+<div id="functions-as-objects" class="slide section level1">
+<h1>Functions as objects</h1>
+<ul>
+<li>Functions are actually objects themselves:</li>
+</ul>
+<pre class="sourceCode r"><code class="sourceCode r">my.fun &lt;-<span class="st"> </span>function() <span class="dv">42</span>
+<span class="kw">mode</span>(my.fun)</code></pre>
+<pre><code>## [1] &quot;function&quot;</code></pre>
+<ul>
+<li>You can assign them:</li>
+</ul>
+<pre class="sourceCode r"><code class="sourceCode r">my.fun2 &lt;-<span class="st"> </span>my.fun</code></pre>
+<ul>
+<li>Or pass them around:</li>
+</ul>
+<pre class="sourceCode r"><code class="sourceCode r">call.fun &lt;-<span class="st"> </span>function(x) <span class="kw">x</span>()
+<span class="kw">call.fun</span>(my.fun)</code></pre>
+<pre><code>## [1] 42</code></pre>
+</div>
+<div id="functions-as-objects-1" class="slide section level1">
+<h1>Functions as objects</h1>
+<ul>
+<li>You can even return a function from a function:</li>
+</ul>
+<pre class="sourceCode r"><code class="sourceCode r">make.normal.pdf &lt;-<span class="st"> </span>function(mu, sigma) {
+    function(x) <span class="kw">dnorm</span>(x, mu, sigma)
+}
+dmydist1 &lt;-<span class="st"> </span><span class="kw">make.normal.pdf</span>(<span class="dv">10</span>, <span class="dv">2</span>)
+dmydist2 &lt;-<span class="st"> </span><span class="kw">make.normal.pdf</span>(<span class="dv">20</span>, <span class="dv">1</span>)
+<span class="kw">dmydist1</span>(<span class="dv">10</span>)</code></pre>
+<pre><code>## [1] 0.1995</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">dnorm</span>(<span class="dv">10</span>, <span class="dv">10</span>, <span class="dv">2</span>)</code></pre>
+<pre><code>## [1] 0.1995</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">dmydist2</span>(<span class="dv">10</span>)</code></pre>
+<pre><code>## [1] 7.695e-23</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">dnorm</span>(<span class="dv">10</span>, <span class="dv">20</span>, <span class="dv">1</span>)</code></pre>
+<pre><code>## [1] 7.695e-23</code></pre>
+<ul>
+<li>Note how the values of mu and sigma are “remembered”—a consequence of scope</li>
+</ul>
+</div>
+<div id="vectorizing-functions" class="slide section level1">
+<h1>Vectorizing functions</h1>
+<ul>
+<li>Arguments to functions might be vectors of length &gt; 1</li>
+</ul>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sqrt</span>(<span class="dv">1</span>:<span class="dv">10</span>)</code></pre>
+<pre><code>##  [1] 1.000 1.414 1.732 2.000 2.236 2.449 2.646 2.828 3.000 3.162</code></pre>
+<ul>
+<li>Often you don’t need to explicitly account for this at all</li>
+</ul>
+<pre class="sourceCode r"><code class="sourceCode r">square &lt;-<span class="st"> </span>function(x) x^<span class="dv">2</span>
+<span class="kw">square</span>(<span class="dv">1</span>:<span class="dv">10</span>)</code></pre>
+<pre><code>##  [1]   1   4   9  16  25  36  49  64  81 100</code></pre>
+</div>
+</body>
+</html>

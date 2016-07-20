@@ -1,0 +1,149 @@
+% Functions
+
+# User-defined Functions
+
+- To define your own function, use the *function* function:
+```{r}
+square <- function(x) x^2
+square(5)
+square(8)
+```
+
+- Function definition is in the form function(arglist) expr
+
+# Longer functions
+
+- For longer functions (more than one line), the expression can be bracketed
+- Even for shorter functions, this can make things more readable
+```{r}
+square <- function(x) {
+  x^2
+}
+```
+
+# Return values
+
+- You can use the return function to explicitly return values
+```{r}
+square <- function(x) {
+  return(x^2)
+}
+```
+- Otherwise, the last evaluated expression is returned, as we've seen above
+
+# Return values, continued
+
+- Return is particularly useful for early exits
+```{r}
+square <- function(x) {
+  if (!is.numeric(x)) {
+    return(NaN)
+  }
+  x^2
+}
+square(6)
+square("R")
+```
+
+# Multiple arguments
+
+- Functions can, of course, operate on multiple arguments
+```{r}
+sum.of.squares <- function(x, y) {
+  sum(x^2 + y^2)
+}
+args(sum.of.squares)
+sum.of.squares(5, 10)
+sum.of.squares(x=5, y=10)
+sum.of.squares(y=10, x=5)
+```
+
+# Default values
+
+- You can also specify default values for arguments
+```{r}
+sum.of.squares <- function(x, y=0) {
+  sum(x^2 + y^2)
+}
+sum.of.squares(5)
+sum.of.squares(5, 0)
+sum.of.squares(5, 10)
+```
+
+# Variable scope
+
+- Generally, variables created in functions only exist within that function,
+even if they have the same name as an existing variable
+```{r}
+x <- 5
+my.fun <- function() {
+  x <- 25
+}
+my.fun()
+x
+```
+
+# Variable scope, continued
+
+- However, it is possible to assign to variables in the outer environment
+```{r}
+x <- 5
+my.fun <- function() {
+  x <<- 25
+}
+my.fun()
+x
+```
+- But you generally shouldn't need to do this!
+- The exact workings of this are actually somewhat complex
+
+# Lexical scoping
+
+- R uses *lexical scoping*
+- Basically, a variable exists within a given environment but not outside of that environment
+- The previous example covers most of what you *need* to know, but there's more to scoping
+
+# Functions as objects
+
+- Functions are actually objects themselves:
+```{r}
+my.fun <- function() 42
+mode(my.fun)
+```
+- You can assign them:
+```{r}
+my.fun2 <- my.fun
+```
+- Or pass them around:
+```{r}
+call.fun <- function(x) x()
+call.fun(my.fun)
+```
+
+# Functions as objects
+
+- You can even return a function from a function:
+```{r}
+make.normal.pdf <- function(mu, sigma) {
+  function(x) dnorm(x, mu, sigma)
+}
+dmydist1 <- make.normal.pdf(10, 2)
+dmydist2 <- make.normal.pdf(20, 1)
+dmydist1(10)
+dnorm(10, 10, 2)
+dmydist2(10)
+dnorm(10, 20, 1)
+```
+- Note how the values of mu and sigma are "remembered"---a consequence of scope
+
+# Vectorizing functions
+
+- Arguments to functions might be vectors of length > 1
+```{r}
+sqrt(1:10)
+```
+- Often you don't need to explicitly account for this at all, since the functions you call within your functions may already be vectorized
+```{r}
+square <- function(x) x^2
+square(1:10)
+```
